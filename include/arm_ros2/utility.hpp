@@ -29,45 +29,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <yaml-cpp/yaml.h>
-
-#include <arm_ros2/cli.hpp>
-#include <arm_ros2/config.hpp>
-#include <iostream>
+#pragma once
 
 namespace arm_ros2
 {
-    int Cli::run(int argc, char **argv)
+    // https://en.cppreference.com/w/cpp/utility/unreachable.html
+    [[noreturn]] inline void unreachable()
     {
-#define DEFAULT_CONFIG_PATH "config/config.yaml"
-
-        const char *configPath;
-
-        if (argc < 2)
-        {
-            configPath = DEFAULT_CONFIG_PATH;
-        }
-        else
-        {
-            configPath = argv[1];
-        }
-
-        auto config = Config();
-        auto parserError = config.parse(configPath);
-
-        if (parserError != std::nullopt)
-        {
-            auto parserErrorMessage = static_cast<std::string>(*parserError);
-
-            emitError(parserErrorMessage);
-
-            return EXIT_FAILURE;
-        }
-
-        return EXIT_SUCCESS;
-
-#undef DEFAULT_CONFIG_PATH
+        // Uses compiler specific extensions if possible.
+        // Even if no extension is used, undefined behavior is still raised by
+        // an empty function body and the noreturn attribute.
+#if defined(_MSC_VER) && !defined(__clang__)  // MSVC
+        __assume(false);
+#else  // GCC, Clang
+        __builtin_unreachable();
+#endif
     }
-
-    void Cli::emitError(std::string_view message) { std::cerr << "\x1b[31mError\x1b[0m: " << message << std::endl; }
 }  // namespace arm_ros2

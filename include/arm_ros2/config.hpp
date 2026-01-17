@@ -33,11 +33,117 @@
 
 #include <yaml-cpp/yaml.h>
 
-namespace arm_ros2 {	
-	class Config {
-	public:
-		Config(const YAML::Node &node) {}
-		~Config() = default;
-	private:
-	};
-}
+#include <arm_ros2/config/gripper.hpp>
+#include <arm_ros2/config/joint.hpp>
+#include <memory>
+#include <optional>
+#include <sstream>
+#include <string>
+#include <unordered_map>
+
+namespace arm_ros2
+{
+    class Config final
+    {
+        public:
+        Config() = default;
+        ~Config() = default;
+
+        struct ParserError
+        {
+            enum class Kind
+            {
+                AlreadyParsed,
+                BadFile,
+                Syntax,
+                Other
+            };
+
+            struct AlreadyParsed;
+            struct BadFile;
+            struct Syntax;
+            struct Other;
+
+            ParserError(Kind kind) { _kind = kind; }
+            ~ParserError() = default;
+
+            explicit operator std::string() const noexcept;
+
+            private:
+            Kind _kind;
+        };
+
+        struct ParserError::AlreadyParsed final : ParserError
+        {
+            AlreadyParsed() : ParserError(ParserError::Kind::AlreadyParsed) {}
+
+            operator std::string() const noexcept { return "Already parsed"; }
+        };
+
+        struct ParserError::BadFile final : ParserError
+        {
+            BadFile() : ParserError(ParserError::Kind::BadFile) {}
+
+            operator std::string() const noexcept { return "Bad file: not found or something else wrong"; }
+        };
+
+        struct ParserError::Syntax final : ParserError
+        {
+            Syntax(std::string details) : ParserError(ParserError::Kind::Syntax), _details(details) {}
+
+            operator std::string() const noexcept
+            {
+                std::stringstream ss;
+
+                ss << "Syntax: " << _details;
+
+                return ss.str();
+            }
+
+            private:
+            std::string _details;
+        };
+
+        struct ParserError::Other final : ParserError
+        {
+            Other(std::string message) : ParserError(ParserError::Kind::Other), _message(message) {}
+
+            operator std::string() const noexcept
+            {
+                std::stringstream ss;
+
+                ss << "Other: " << _message;
+
+                return ss.str();
+            }
+
+            private:
+            std::string _message;
+        };
+
+        using ParserErrorOr = std::optional<ParserError>;
+
+        /**
+         *
+         * @brief Parse the configuration.
+         */
+        [[nodiscard]] ParserErrorOr parse(const std::string& filename) noexcept;
+
+        /**
+         *
+         * @brief Get the joints of the given instance.
+         */
+        const std::unordered_map<std::shared_ptr<std::string>, Joint>& getJoints() const noexcept { return _joints; }
+
+        /**
+         *
+         * @brief Get the gripper of the given instance.
+         */
+        const Gripper& getGripper() const noexcept { return _gripper; }
+
+        private:
+        std::unordered_map<std::shared_ptr<std::string>, Joint> _joints;
+        Gripper _gripper;
+        bool _is_initialized = false;
+    };
+}  // namespace arm_ros2

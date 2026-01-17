@@ -29,7 +29,60 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <arm_ros2/config.hpp>
+#include <yaml-cpp/yaml.h>
 
-namespace arm_ros2 {
-}
+#include <arm_ros2/config.hpp>
+#include <arm_ros2/utility.hpp>
+
+namespace arm_ros2
+{
+    Config::ParserError::operator std::string() const noexcept
+    {
+        switch (_kind)
+        {
+            case Config::ParserError::Kind::AlreadyParsed:
+                return static_cast<std::string>(static_cast<const Config::ParserError::AlreadyParsed &>(*this));
+            case Config::ParserError::Kind::BadFile:
+                return static_cast<std::string>(static_cast<const Config::ParserError::BadFile &>(*this));
+            case Config::ParserError::Kind::Syntax:
+                return static_cast<std::string>(static_cast<const Config::ParserError::Syntax &>(*this));
+            case Config::ParserError::Kind::Other:
+                return static_cast<std::string>(static_cast<const Config::ParserError::Other &>(*this));
+            default:
+                unreachable();
+        }
+    }
+
+    Config::ParserErrorOr Config::parse(const std::string &filename) noexcept
+    {
+        if (_is_initialized)
+        {
+            return Config::ParserError::AlreadyParsed();
+        }
+
+        try
+        {
+            auto node = YAML::LoadFile(filename);
+        }
+        catch (const YAML::BadFile &)
+        {
+            return Config::ParserError::BadFile();
+        }
+        catch (const YAML::ParserException &e)
+        {
+            return Config::ParserError::Syntax(e.what());
+        }
+        catch (const std::runtime_error &e)
+        {
+            return Config::ParserError::Other(e.what());
+        }
+        catch (...)
+        {
+            return Config::ParserError::Other("Unknown error");
+        }
+
+        // TODO:
+
+        return {};
+    }
+}  // namespace arm_ros2

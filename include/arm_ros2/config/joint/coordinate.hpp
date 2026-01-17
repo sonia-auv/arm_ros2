@@ -29,45 +29,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <yaml-cpp/yaml.h>
-
-#include <arm_ros2/cli.hpp>
-#include <arm_ros2/config.hpp>
-#include <iostream>
+#pragma once
 
 namespace arm_ros2
 {
-    int Cli::run(int argc, char **argv)
+    template <typename V>
+    class Coordinate
     {
-#define DEFAULT_CONFIG_PATH "config/config.yaml"
+        public:
+        Coordinate(V x = {}, V y = {}, V z = {}) : _x(x), _y(y), _z(z) {}
+        Coordinate(const Coordinate&) = default;
+        ~Coordinate() = default;
 
-        const char *configPath;
+        /**
+         *
+         * @brief Get _x attribute.
+         */
+        V getX() const noexcept { return _x; }
 
-        if (argc < 2)
-        {
-            configPath = DEFAULT_CONFIG_PATH;
-        }
-        else
-        {
-            configPath = argv[1];
-        }
+        /**
+         *
+         * @brief Get _y attribute.
+         */
+        V getY() const noexcept { return _y; }
 
-        auto config = Config();
-        auto parserError = config.parse(configPath);
+        /**
+         *
+         * @brief Get _z attribute.
+         */
+        V getZ() const noexcept { return _z; }
 
-        if (parserError != std::nullopt)
-        {
-            auto parserErrorMessage = static_cast<std::string>(*parserError);
-
-            emitError(parserErrorMessage);
-
-            return EXIT_FAILURE;
-        }
-
-        return EXIT_SUCCESS;
-
-#undef DEFAULT_CONFIG_PATH
-    }
-
-    void Cli::emitError(std::string_view message) { std::cerr << "\x1b[31mError\x1b[0m: " << message << std::endl; }
+        private:
+        V _x;
+        V _y;
+        V _z;
+    };
 }  // namespace arm_ros2

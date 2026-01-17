@@ -31,17 +31,20 @@
 
 #pragma once
 
-namespace arm_ros2 {
-	struct Cli {
-		/**
-		 *
-		 * @param argc Number of argument provided.
-		 * @param argv 
-		 */
-		static int run(int argc, char **argv);
+#include <string_view>
 
-		private:
+namespace arm_ros2
+{
+    struct Cli
+    {
+        /**
+         *
+         * @param argc Number of argument provided.
+         * @param argv
+         */
+        static int run(int argc, char **argv);
 
-		static void emitError(const char *message);
-	};
-}
+        private:
+        static void emitError(std::string_view message);
+    };
+}  // namespace arm_ros2

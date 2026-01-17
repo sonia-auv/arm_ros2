@@ -29,45 +29,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <yaml-cpp/yaml.h>
+#pragma once
 
-#include <arm_ros2/cli.hpp>
-#include <arm_ros2/config.hpp>
-#include <iostream>
+#include <arm_ros2/config/joint/coordinate.hpp>
 
 namespace arm_ros2
 {
-    int Cli::run(int argc, char **argv)
+    class Position final : public Coordinate<float>
     {
-#define DEFAULT_CONFIG_PATH "config/config.yaml"
-
-        const char *configPath;
-
-        if (argc < 2)
-        {
-            configPath = DEFAULT_CONFIG_PATH;
-        }
-        else
-        {
-            configPath = argv[1];
-        }
-
-        auto config = Config();
-        auto parserError = config.parse(configPath);
-
-        if (parserError != std::nullopt)
-        {
-            auto parserErrorMessage = static_cast<std::string>(*parserError);
-
-            emitError(parserErrorMessage);
-
-            return EXIT_FAILURE;
-        }
-
-        return EXIT_SUCCESS;
-
-#undef DEFAULT_CONFIG_PATH
-    }
-
-    void Cli::emitError(std::string_view message) { std::cerr << "\x1b[31mError\x1b[0m: " << message << std::endl; }
+        using Coordinate<float>::Coordinate;
+    };
 }  // namespace arm_ros2

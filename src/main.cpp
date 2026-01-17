@@ -33,6 +33,4 @@
 
 using namespace arm_ros2;
 
-int main(int argc, char **argv) {
-	return Cli::run(argc, argv);
-}
+int main(int argc, char **argv) { return Cli::run(argc, argv); }
