@@ -33,6 +33,7 @@
 
 #include <arm_ros2/config.hpp>
 #include <arm_ros2/utility.hpp>
+#include <sstream>
 
 namespace arm_ros2
 {
@@ -51,6 +52,24 @@ namespace arm_ros2
             default:
                 unreachable();
         }
+    }
+
+    Config::ParserError::Syntax::operator std::string() const noexcept
+    {
+        std::stringstream ss;
+
+        ss << "Syntax: " << _details;
+
+        return ss.str();
+    }
+
+    Config::ParserError::Other::operator std::string() const noexcept
+    {
+        std::stringstream ss;
+
+        ss << "Other: " << _message;
+
+        return ss.str();
     }
 
     Config::ParserErrorOr Config::parse(const std::string &filename) noexcept

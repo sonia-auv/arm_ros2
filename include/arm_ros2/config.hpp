@@ -37,7 +37,6 @@
 #include <arm_ros2/config/joint.hpp>
 #include <memory>
 #include <optional>
-#include <sstream>
 #include <string>
 #include <unordered_map>
 
@@ -91,14 +90,7 @@ namespace arm_ros2
         {
             Syntax(std::string details) : ParserError(ParserError::Kind::Syntax), _details(details) {}
 
-            operator std::string() const noexcept
-            {
-                std::stringstream ss;
-
-                ss << "Syntax: " << _details;
-
-                return ss.str();
-            }
+            operator std::string() const noexcept;
 
             private:
             std::string _details;
@@ -108,14 +100,7 @@ namespace arm_ros2
         {
             Other(std::string message) : ParserError(ParserError::Kind::Other), _message(message) {}
 
-            operator std::string() const noexcept
-            {
-                std::stringstream ss;
-
-                ss << "Other: " << _message;
-
-                return ss.str();
-            }
+            operator std::string() const noexcept;
 
             private:
             std::string _message;
