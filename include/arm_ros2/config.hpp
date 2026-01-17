@@ -29,10 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <arm_ros2/cli.hpp>
+#pragma once
 
-using namespace arm_ros2;
+#include <yaml-cpp/yaml.h>
 
-int main(int argc, char **argv) {
-	return Cli::run(argc, argv);
+namespace arm_ros2 {	
+	class Config {
+	public:
+		Config(const YAML::Node &node) {}
+		~Config() = default;
+	private:
+	};
 }

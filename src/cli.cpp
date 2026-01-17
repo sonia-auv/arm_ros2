@@ -30,9 +30,41 @@
  */
 
 #include <arm_ros2/cli.hpp>
+#include <arm_ros2/config.hpp>
 
-using namespace arm_ros2;
+#include <yaml-cpp/yaml.h>
 
-int main(int argc, char **argv) {
-	return Cli::run(argc, argv);
+#include <iostream>
+
+namespace arm_ros2 {
+	int Cli::run(int argc, char **argv)
+	{
+#define DEFAULT_CONFIG_PATH "config/config.yaml"
+
+		const char *configPath;
+
+		if (argc < 2) {
+			configPath = DEFAULT_CONFIG_PATH;
+		} else {
+			configPath = argv[1];
+		}
+
+		try {
+			auto node = YAML::LoadFile(configPath);
+			auto config = Config(node);
+		} catch (const std::runtime_error &e) {
+			emitError(e.what());
+
+			return EXIT_FAILURE;
+		}
+
+		return EXIT_SUCCESS;
+
+#undef DEFAULT_CONFIG_PATH
+	}
+
+	void Cli::emitError(const char *message)
+	{
+		std::cerr << "\x1b[31mError\x1b[0m: " << message << std::endl;
+	}
 }

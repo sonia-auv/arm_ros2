@@ -29,10 +29,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <arm_ros2/cli.hpp>
+#pragma once
 
-using namespace arm_ros2;
+namespace arm_ros2 {
+	struct Cli {
+		/**
+		 *
+		 * @param argc Number of argument provided.
+		 * @param argv 
+		 */
+		static int run(int argc, char **argv);
 
-int main(int argc, char **argv) {
-	return Cli::run(argc, argv);
+		private:
+
+		static void emitError(const char *message);
+	};
 }
