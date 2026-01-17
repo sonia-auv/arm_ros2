@@ -1,6 +1,7 @@
 # Config
 
-This document explains how to create a configuration for an arm with modular parameters. 
+This document explains how to create a configuration for an arm
+with modular parameters.
 
 ## Example
 
@@ -29,8 +30,9 @@ gripper:
 ### joints
 
 The `joints` parameter allows you to define all the properties
-of the joints of a given robotic arm. A collection is expected,
-giving a unique name to each of the joints that make up the arm.
+of the joints of a given robotic arm, from the base to the end
+of the arm. A collection is expected, giving a unique name to
+each of the joints that make up the arm.
 
 ```
 joints: collection
