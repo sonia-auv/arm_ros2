@@ -133,7 +133,7 @@ namespace arm_ros2
          */
         const std::unordered_map<std::shared_ptr<std::string>, Joint>& getJoints() const noexcept { return _joints; }
 
-	void insertJoint(Joint joint) noexcept { _joints.insert({ joint.getNamePtr(), joint }); }
+        void insertJoint(Joint joint) noexcept { _joints.insert({joint.getNamePtr(), joint}); }
 
         /**
          *

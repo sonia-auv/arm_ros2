@@ -51,11 +51,11 @@ namespace arm_ros2
          */
         const std::string& getName() const { return *_name; }
 
-	/**
-	 *
-	 * @brief Get the name pointer of the instance.
-	 */
-	std::shared_ptr<std::string> getNamePtr() const { return _name; }
+        /**
+         *
+         * @brief Get the name pointer of the instance.
+         */
+        std::shared_ptr<std::string> getNamePtr() const { return _name; }
 
         /**
          *

@@ -204,7 +204,7 @@ namespace arm_ros2
         joint.setAngle(angle);
         joint.setMaxAngle(maxAngle);
 
-	insertJoint(joint);
+        insertJoint(joint);
 
         return {};
     }
