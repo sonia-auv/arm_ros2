@@ -85,7 +85,8 @@ namespace arm_ros2
                                                                      CoordinateCompatible &coordinate,
                                                                      const char *key) noexcept
     {
-        static_assert(std::is_base_of_v<Coordinate<float>, CoordinateCompatible>,
+        using CoordinateValue = float;
+        static_assert(std::is_base_of_v<Coordinate<CoordinateValue>, CoordinateCompatible>,
                       "`CoordinateCompatible` is not the base of `Coordinate`");
 
         const YAML::Node &coordinateNode = node[key];
@@ -100,10 +101,10 @@ namespace arm_ros2
             return Config::ParserError::BadConfig(Config::ParserError::_BadConfig(errorFormat.str()));
         }
 
-        std::tuple<const char *, std::function<void(CoordinateCompatible &, float)>> coordinateKeyFns[] = {
-            {"x", [](CoordinateCompatible &coordinate, float value) -> void { coordinate.setX(value); }},
-            {"y", [](CoordinateCompatible &coordinate, float value) -> void { coordinate.setY(value); }},
-            {"z", [](CoordinateCompatible &coordinate, float value) -> void { coordinate.setZ(value); }},
+        std::tuple<const char *, std::function<void(CoordinateCompatible &, CoordinateValue)>> coordinateKeyFns[] = {
+            {"x", [](CoordinateCompatible &coordinate, CoordinateValue value) -> void { coordinate.setX(value); }},
+            {"y", [](CoordinateCompatible &coordinate, CoordinateValue value) -> void { coordinate.setY(value); }},
+            {"z", [](CoordinateCompatible &coordinate, CoordinateValue value) -> void { coordinate.setZ(value); }},
         };
 
         for (auto &coordinateKeyFn : coordinateKeyFns)
