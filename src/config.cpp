@@ -40,24 +40,17 @@ namespace arm_ros2
 {
     Config::ParserError::operator std::string() const noexcept
     {
-        return std::visit(overloaded{
-                              [](Config::ParserError::_AlreadyParsed value) -> std::string {
-                                  return static_cast<const Config::ParserError::_AlreadyParsed &>(value);
-                              },
-                              [](Config::ParserError::_BadFile value) -> std::string {
-                                  return static_cast<const Config::ParserError::_BadFile &>(value);
-                              },
-                              [](Config::ParserError::_Syntax value) -> std::string {
-                                  return static_cast<const Config::ParserError::_Syntax &>(value);
-                              },
-                              [](Config::ParserError::_BadConfig value) -> std::string {
-                                  return static_cast<const Config::ParserError::_BadConfig &>(value);
-                              },
-                              [](Config::ParserError::_Other value) -> std::string {
-                                  return static_cast<const Config::ParserError::_Other &>(value);
-                              },
-                          },
-                          _value);
+        return std::visit(
+            overloaded{
+                [](Config::ParserError::_AlreadyParsed value) -> std::string {
+                    return static_cast<std::string>(value);
+                },
+                [](Config::ParserError::_BadFile value) -> std::string { return static_cast<std::string>(value); },
+                [](Config::ParserError::_Syntax value) -> std::string { return static_cast<std::string>(value); },
+                [](Config::ParserError::_BadConfig value) -> std::string { return static_cast<std::string>(value); },
+                [](Config::ParserError::_Other value) -> std::string { return static_cast<std::string>(value); },
+            },
+            _value);
     }
 
     Config::ParserError::_Syntax::operator std::string() const noexcept
