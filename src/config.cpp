@@ -138,9 +138,13 @@ namespace arm_ros2
 
                 return Config::ParserError::BadConfig(Config::ParserError::_BadConfig(errorFormat.str()));
             }
+            catch (const std::runtime_error &e)
+            {
+                return Config::ParserError::Other(Config::ParserError::_Other(e.what()));
+            }
             catch (...)
             {
-                unreachable();
+                return Config::ParserError::Other(Config::ParserError::_Other("Unknown error"));
             }
         }
 
@@ -231,9 +235,62 @@ namespace arm_ros2
         return {};
     }
 
+    [[nodiscard]] Config::ParserErrorOr Config::parseGripperState(const YAML::Node &node) noexcept
+    {
+        const YAML::Node &stateNode = node["state"];
+
+        try
+        {
+            std::string stateValue = stateNode.as<std::string>();
+
+            if (stateValue == "Close")
+            {
+                _gripper.setState(Gripper::State::Close);
+            }
+            else if (stateValue == "Open")
+            {
+                _gripper.setState(Gripper::State::Open);
+            }
+            else
+            {
+                return Config::ParserError::BadConfig(Config::ParserError::_BadConfig(
+                    "Unexpected value on `state` key of the `gripper` key in the configuration"));
+            }
+        }
+        catch (const YAML::TypedBadConversion<std::string> &)
+        {
+            return Config::ParserError::BadConfig(Config::ParserError::_BadConfig(
+                "Expected string value on `state` key of the `gripper` key in the configuration"));
+        }
+        catch (const std::runtime_error &e)
+        {
+            return Config::ParserError::Other(Config::ParserError::_Other(e.what()));
+        }
+        catch (...)
+        {
+            return Config::ParserError::Other(Config::ParserError::_Other("Unknown error"));
+        }
+
+        return {};
+    }
+
     [[nodiscard]] Config::ParserErrorOr Config::parseGripper(const YAML::Node &node) noexcept
     {
-        std::cout << node << "Hello" << std::endl;
+        const YAML::Node &gripperNode = node["gripper"];
+
+        if (!gripperNode)
+        {
+            return Config::ParserError::BadConfig(
+                Config::ParserError::_BadConfig("Expected `gripper` key in the configuration"));
+        }
+
+        ParserErrorOr error;
+
+        if ((error = parseGripperState(gripperNode)) != std::nullopt)
+        {
+            return error;
+        }
+
         return {};
     }
 

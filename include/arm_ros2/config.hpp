@@ -150,6 +150,7 @@ namespace arm_ros2
         [[nodiscard]] ParserErrorOr parseJointPosition(const YAML::Node& node, Position& position) noexcept;
         [[nodiscard]] ParserErrorOr parseJoint(const YAML::Node& node) noexcept;
         [[nodiscard]] ParserErrorOr parseJoints(const YAML::Node& node) noexcept;
+        [[nodiscard]] ParserErrorOr parseGripperState(const YAML::Node& node) noexcept;
         [[nodiscard]] ParserErrorOr parseGripper(const YAML::Node& node) noexcept;
 
         std::unordered_map<std::shared_ptr<std::string>, Joint> _joints;
