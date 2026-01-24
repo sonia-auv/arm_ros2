@@ -100,35 +100,18 @@ namespace arm_ros2
             ParserError(Value value) : _value(value) {}
             ~ParserError() = default;
 
-            static ParserError AlreadyParsed()
-            {
-                return ParserError(std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(
-                    std::in_place_type<_AlreadyParsed>));
-            }
+            static ParserError AlreadyParsed() { return ParserError(Value(std::in_place_type<_AlreadyParsed>)); }
 
-            static ParserError BadFile()
-            {
-                return ParserError(
-                    std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(std::in_place_type<_BadFile>));
-            }
+            static ParserError BadFile() { return ParserError(Value(std::in_place_type<_BadFile>)); }
 
-            static ParserError Syntax(_Syntax value)
-            {
-                return ParserError(std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(
-                    std::in_place_type<_Syntax>, value));
-            }
+            static ParserError Syntax(_Syntax value) { return ParserError(Value(std::in_place_type<_Syntax>, value)); }
 
             static ParserError BadConfig(_BadConfig value)
             {
-                return ParserError(std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(
-                    std::in_place_type<_BadConfig>, value));
+                return ParserError(Value(std::in_place_type<_BadConfig>, value));
             }
 
-            static ParserError Other(_Other value)
-            {
-                return ParserError(std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(
-                    std::in_place_type<_Other>, value));
-            }
+            static ParserError Other(_Other value) { return ParserError(Value(std::in_place_type<_Other>, value)); }
 
             explicit operator std::string() const noexcept;
 

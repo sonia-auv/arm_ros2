@@ -45,7 +45,7 @@ namespace arm_ros2
         __builtin_unreachable();
 #endif
     }
-    
+
     // https://en.cppreference.com/w/cpp/utility/variant/visit2.html
     // Not needed after C++ 20
     template <class... Ts>
