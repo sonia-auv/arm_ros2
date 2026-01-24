@@ -125,11 +125,11 @@ namespace arm_ros2
 
             try
             {
-                float coordinateNodeValueFloat = coordinateNodeValue.as<float>();
+                CoordinateValue coordinateNodeValueConverted = coordinateNodeValue.as<CoordinateValue>();
 
-                setCoordinateFn(coordinate, coordinateNodeValueFloat);
+                setCoordinateFn(coordinate, coordinateNodeValueConverted);
             }
-            catch (const YAML::TypedBadConversion<float> &)
+            catch (const YAML::TypedBadConversion<CoordinateValue> &)
             {
                 std::stringstream errorFormat;
 
