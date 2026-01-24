@@ -39,6 +39,7 @@
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <variant>
 
 namespace arm_ros2
 {
@@ -48,62 +49,91 @@ namespace arm_ros2
         Config() = default;
         ~Config() = default;
 
-        struct ParserError
+        struct ParserError final
         {
-            enum class Kind
+            struct _AlreadyParsed final
             {
-                AlreadyParsed,
-                BadFile,
-                Syntax,
-                Other
+                _AlreadyParsed() {}
+
+                operator std::string() const noexcept { return "Already parsed"; }
             };
 
-            struct AlreadyParsed;
-            struct BadFile;
-            struct Syntax;
-            struct Other;
+            struct _BadFile final
+            {
+                _BadFile() {}
 
-            ParserError(Kind kind) { _kind = kind; }
+                operator std::string() const noexcept { return "Bad file: not found or something else wrong"; }
+            };
+
+            struct _Syntax final
+            {
+                _Syntax(std::string details) : _details(details) {}
+
+                operator std::string() const noexcept;
+
+                private:
+                std::string _details;
+            };
+
+            struct _BadConfig final
+            {
+                _BadConfig(std::string details) : _details(details) {}
+
+                operator std::string() const noexcept;
+
+                private:
+                std::string _details;
+            };
+
+            struct _Other final
+            {
+                _Other(std::string message) : _message(message) {}
+
+                operator std::string() const noexcept;
+
+                private:
+                std::string _message;
+            };
+
+            using Value = std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>;
+
+            ParserError(Value value) : _value(value) {}
             ~ParserError() = default;
+
+            static ParserError AlreadyParsed()
+            {
+                return ParserError(std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(
+                    std::in_place_type<_AlreadyParsed>));
+            }
+
+            static ParserError BadFile()
+            {
+                return ParserError(
+                    std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(std::in_place_type<_BadFile>));
+            }
+
+            static ParserError Syntax(_Syntax value)
+            {
+                return ParserError(std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(
+                    std::in_place_type<_Syntax>, value));
+            }
+
+            static ParserError BadConfig(_BadConfig value)
+            {
+                return ParserError(std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(
+                    std::in_place_type<_BadConfig>, value));
+            }
+
+            static ParserError Other(_Other value)
+            {
+                return ParserError(std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>(
+                    std::in_place_type<_Other>, value));
+            }
 
             explicit operator std::string() const noexcept;
 
             private:
-            Kind _kind;
-        };
-
-        struct ParserError::AlreadyParsed final : ParserError
-        {
-            AlreadyParsed() : ParserError(ParserError::Kind::AlreadyParsed) {}
-
-            operator std::string() const noexcept { return "Already parsed"; }
-        };
-
-        struct ParserError::BadFile final : ParserError
-        {
-            BadFile() : ParserError(ParserError::Kind::BadFile) {}
-
-            operator std::string() const noexcept { return "Bad file: not found or something else wrong"; }
-        };
-
-        struct ParserError::Syntax final : ParserError
-        {
-            Syntax(std::string details) : ParserError(ParserError::Kind::Syntax), _details(details) {}
-
-            operator std::string() const noexcept;
-
-            private:
-            std::string _details;
-        };
-
-        struct ParserError::Other final : ParserError
-        {
-            Other(std::string message) : ParserError(ParserError::Kind::Other), _message(message) {}
-
-            operator std::string() const noexcept;
-
-            private:
-            std::string _message;
+            Value _value;
         };
 
         using ParserErrorOr = std::optional<ParserError>;
@@ -127,6 +157,10 @@ namespace arm_ros2
         const Gripper& getGripper() const noexcept { return _gripper; }
 
         private:
+        [[nodiscard]] ParserErrorOr parseJoint(const YAML::Node& node) noexcept;
+        [[nodiscard]] ParserErrorOr parseJoints(const YAML::Node& node) noexcept;
+        [[nodiscard]] ParserErrorOr parseGripper(const YAML::Node& node) noexcept;
+
         std::unordered_map<std::shared_ptr<std::string>, Joint> _joints;
         Gripper _gripper;
         bool _is_initialized = false;

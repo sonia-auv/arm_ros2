@@ -29,32 +29,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <yaml-cpp/yaml.h>
-
 #include <arm_ros2/config.hpp>
 #include <arm_ros2/utility.hpp>
+#include <iostream>
 #include <sstream>
 
 namespace arm_ros2
 {
     Config::ParserError::operator std::string() const noexcept
     {
-        switch (_kind)
-        {
-            case Config::ParserError::Kind::AlreadyParsed:
-                return static_cast<std::string>(static_cast<const Config::ParserError::AlreadyParsed &>(*this));
-            case Config::ParserError::Kind::BadFile:
-                return static_cast<std::string>(static_cast<const Config::ParserError::BadFile &>(*this));
-            case Config::ParserError::Kind::Syntax:
-                return static_cast<std::string>(static_cast<const Config::ParserError::Syntax &>(*this));
-            case Config::ParserError::Kind::Other:
-                return static_cast<std::string>(static_cast<const Config::ParserError::Other &>(*this));
-            default:
-                unreachable();
-        }
+        return std::visit(overloaded{
+                              [](Config::ParserError::_AlreadyParsed value) -> std::string {
+                                  return static_cast<const Config::ParserError::_AlreadyParsed &>(value);
+                              },
+                              [](Config::ParserError::_BadFile value) -> std::string {
+                                  return static_cast<const Config::ParserError::_BadFile &>(value);
+                              },
+                              [](Config::ParserError::_Syntax value) -> std::string {
+                                  return static_cast<const Config::ParserError::_Syntax &>(value);
+                              },
+                              [](Config::ParserError::_BadConfig value) -> std::string {
+                                  return static_cast<const Config::ParserError::_BadConfig &>(value);
+                              },
+                              [](Config::ParserError::_Other value) -> std::string {
+                                  return static_cast<const Config::ParserError::_Other &>(value);
+                              },
+                          },
+                          _value);
     }
 
-    Config::ParserError::Syntax::operator std::string() const noexcept
+    Config::ParserError::_Syntax::operator std::string() const noexcept
     {
         std::stringstream ss;
 
@@ -63,13 +67,61 @@ namespace arm_ros2
         return ss.str();
     }
 
-    Config::ParserError::Other::operator std::string() const noexcept
+    Config::ParserError::_BadConfig::operator std::string() const noexcept
+    {
+        std::stringstream ss;
+
+        ss << "BadConfig: " << _details;
+
+        return ss.str();
+    }
+
+    Config::ParserError::_Other::operator std::string() const noexcept
     {
         std::stringstream ss;
 
         ss << "Other: " << _message;
 
         return ss.str();
+    }
+
+    [[nodiscard]] Config::ParserErrorOr Config::parseJoint(const YAML::Node &node) noexcept
+    {
+        std::cout << node << "Hello" << std::endl;
+        return {};
+    }
+
+    [[nodiscard]] Config::ParserErrorOr Config::parseJoints(const YAML::Node &node) noexcept
+    {
+        const YAML::Node joints = node["joints"];
+
+        if (!joints)
+        {
+            return Config::ParserError::BadConfig(
+                Config::ParserError::_BadConfig("Expected `joints` key in the configuration"));
+        }
+        else if (!joints.IsMap())
+        {
+            return Config::ParserError::BadConfig(Config::ParserError::_BadConfig("Expected a map for `joints` key"));
+        }
+
+        for (const std::pair<YAML::Node, YAML::Node> &keyValue : node)
+        {
+            auto parseError = parseJoint(keyValue.second);
+
+            if (parseError != std::nullopt)
+            {
+                return parseError;
+            }
+        }
+
+        return {};
+    }
+
+    [[nodiscard]] Config::ParserErrorOr Config::parseGripper(const YAML::Node &node) noexcept
+    {
+        std::cout << node << "Hello" << std::endl;
+        return {};
     }
 
     Config::ParserErrorOr Config::parse(const std::string &filename) noexcept
@@ -79,9 +131,11 @@ namespace arm_ros2
             return Config::ParserError::AlreadyParsed();
         }
 
+        YAML::Node node;
+
         try
         {
-            auto node = YAML::LoadFile(filename);
+            node = YAML::LoadFile(filename);
         }
         catch (const YAML::BadFile &)
         {
@@ -89,18 +143,31 @@ namespace arm_ros2
         }
         catch (const YAML::ParserException &e)
         {
-            return Config::ParserError::Syntax(e.what());
+            return Config::ParserError::Syntax(Config::ParserError::_Syntax(e.what()));
         }
         catch (const std::runtime_error &e)
         {
-            return Config::ParserError::Other(e.what());
+            return Config::ParserError::Other(Config::ParserError::_Other(e.what()));
         }
         catch (...)
         {
-            return Config::ParserError::Other("Unknown error");
+            return Config::ParserError::Other(Config::ParserError::_Other("Unknown error"));
         }
 
-        // TODO:
+        std::function<Config::ParserErrorOr(Config &, YAML::Node &)> parseFunctions[] = {
+            &Config::parseJoints,
+            &Config::parseGripper,
+        };
+
+        for (const auto &parseFunction : parseFunctions)
+        {
+            auto parserError = parseFunction(*this, node);
+
+            if (parserError != std::nullopt)
+            {
+                return parserError;
+            }
+        }
 
         return {};
     }

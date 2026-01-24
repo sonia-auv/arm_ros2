@@ -55,9 +55,9 @@ namespace arm_ros2
         auto config = Config();
         auto parserError = config.parse(configPath);
 
-        if (parserError != std::nullopt)
+        if (parserError.has_value())
         {
-            auto parserErrorMessage = static_cast<std::string>(*parserError);
+            auto parserErrorMessage = static_cast<std::string>(parserError.value());
 
             emitError(parserErrorMessage);
 
