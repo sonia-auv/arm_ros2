@@ -31,8 +31,10 @@
 
 #include <arm_ros2/config.hpp>
 #include <arm_ros2/utility.hpp>
+#include <cassert>
 #include <iostream>
 #include <sstream>
+#include <tuple>
 
 namespace arm_ros2
 {
@@ -85,29 +87,146 @@ namespace arm_ros2
         return ss.str();
     }
 
+    template <class CoordinateCompatible>
+    [[nodiscard]] Config::ParserErrorOr Config::parseJointCoordinate(const YAML::Node &node,
+                                                                     CoordinateCompatible &coordinate,
+                                                                     const char *key) noexcept
+    {
+        static_assert(std::is_base_of_v<Coordinate<float>, CoordinateCompatible>,
+                      "`CoordinateCompatible` is not the base of `Coordinate`");
+
+        const YAML::Node &coordinateNode = node[key];
+
+        if (!coordinateNode)
+        {
+            std::stringstream errorFormat;
+
+            errorFormat << "Expected "
+                        << "`" << key << "` key in the joint configuration";
+
+            return Config::ParserError::BadConfig(Config::ParserError::_BadConfig(errorFormat.str()));
+        }
+
+        std::tuple<const char *, std::function<void(CoordinateCompatible &, float)>> coordinateKeyFns[] = {
+            {"x", [](CoordinateCompatible &coordinate, float value) -> void { coordinate.setX(value); }},
+            {"y", [](CoordinateCompatible &coordinate, float value) -> void { coordinate.setY(value); }},
+            {"z", [](CoordinateCompatible &coordinate, float value) -> void { coordinate.setZ(value); }},
+        };
+
+        for (auto &coordinateKeyFn : coordinateKeyFns)
+        {
+            auto coordinateKey = std::get<0>(coordinateKeyFn);
+            const YAML::Node &coordinateNodeValue = coordinateNode[coordinateKey];
+            auto &setCoordinateFn = std::get<1>(coordinateKeyFn);
+
+            if (!coordinateNodeValue)
+            {
+                std::stringstream errorFormat;
+
+                errorFormat << "Expected `" << coordinateKey << "` key in the `" << key
+                            << "` in the joint configuration";
+
+                return Config::ParserError::BadConfig(Config::ParserError::_BadConfig(errorFormat.str()));
+            }
+
+            try
+            {
+                float coordinateNodeValueFloat = coordinateNodeValue.as<float>();
+
+                setCoordinateFn(coordinate, coordinateNodeValueFloat);
+            }
+            catch (const YAML::TypedBadConversion<float> &)
+            {
+                std::stringstream errorFormat;
+
+                errorFormat << "Expected `" << coordinateKey << "` key to be compatible with float in the `" << key
+                            << "` in the joint configuration";
+
+                return Config::ParserError::BadConfig(Config::ParserError::_BadConfig(errorFormat.str()));
+            }
+            catch (...)
+            {
+                unreachable();
+            }
+        }
+
+        return {};
+    }
+
+    [[nodiscard]] Config::ParserErrorOr Config::parseJointMaxAngle(const YAML::Node &node, MaxAngle &maxAngle) noexcept
+    {
+        return parseJointCoordinate<MaxAngle>(node, maxAngle, "maxAngle");
+    }
+
+    [[nodiscard]] Config::ParserErrorOr Config::parseJointAngle(const YAML::Node &node, Angle &angle) noexcept
+    {
+        return parseJointCoordinate<Angle>(node, angle, "angle");
+    }
+
+    [[nodiscard]] Config::ParserErrorOr Config::parseJointPosition(const YAML::Node &node, Position &position) noexcept
+    {
+        return parseJointCoordinate<Position>(node, position, "position");
+    }
+
     [[nodiscard]] Config::ParserErrorOr Config::parseJoint(const YAML::Node &node) noexcept
     {
-        std::cout << node << "Hello" << std::endl;
+        if (!node.IsMap())
+        {
+            return Config::ParserError::BadConfig(
+                Config::ParserError::_BadConfig("Expected a sequence of map for `joints` key"));
+        }
+
+        assert(node.begin() != node.end());
+
+        std::pair<const YAML::Node &, const YAML::Node &> keyValue = *(node.begin());
+        std::string jointName = keyValue.first.as<std::string>();
+        Joint joint(std::move(jointName));
+        Position position;
+        Angle angle;
+        MaxAngle maxAngle;
+        std::function<Config::ParserErrorOr(void)> parseJointItemFns[] = {
+            std::bind(&Config::parseJointPosition, *this, node, position),
+            std::bind(&Config::parseJointAngle, *this, node, angle),
+            std::bind(&Config::parseJointMaxAngle, *this, node, maxAngle),
+        };
+
+        for (auto &parseJointItemFn : parseJointItemFns)
+        {
+            auto error = parseJointItemFn();
+
+            if (error != std::nullopt)
+            {
+                return error;
+            }
+        }
+
+        joint.setPosition(position);
+        joint.setAngle(angle);
+        joint.setMaxAngle(maxAngle);
+
+	insertJoint(joint);
+
         return {};
     }
 
     [[nodiscard]] Config::ParserErrorOr Config::parseJoints(const YAML::Node &node) noexcept
     {
-        const YAML::Node joints = node["joints"];
+        const YAML::Node &joints = node["joints"];
 
         if (!joints)
         {
             return Config::ParserError::BadConfig(
                 Config::ParserError::_BadConfig("Expected `joints` key in the configuration"));
         }
-        else if (!joints.IsMap())
+        else if (!joints.IsSequence())
         {
-            return Config::ParserError::BadConfig(Config::ParserError::_BadConfig("Expected a map for `joints` key"));
+            return Config::ParserError::BadConfig(
+                Config::ParserError::_BadConfig("Expected a sequence for `joints` key"));
         }
 
-        for (const std::pair<YAML::Node, YAML::Node> &keyValue : node)
+        for (const YAML::Node &item : joints)
         {
-            auto parseError = parseJoint(keyValue.second);
+            auto parseError = parseJoint(item);
 
             if (parseError != std::nullopt)
             {

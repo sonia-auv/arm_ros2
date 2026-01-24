@@ -51,6 +51,12 @@ namespace arm_ros2
          */
         const std::string& getName() const { return *_name; }
 
+	/**
+	 *
+	 * @brief Get the name pointer of the instance.
+	 */
+	std::shared_ptr<std::string> getNamePtr() const { return _name; }
+
         /**
          *
          * @brief Get the position of the instance.
@@ -72,29 +78,23 @@ namespace arm_ros2
         /**
          *
          * @brief Set the position attribute with the given x, y and coordinate.
-         * @param x Initial absolute position of X axis
-         * @param y Initial absolute position of Y axis
-         * @param z Initial absolute position of Z axis
+         * @param position Instance of Position class
          */
-        void setPosition(float x = 0, float y = 0, float z = 0) { _position = Position(x, y, z); }
+        void setPosition(Position position) { _position = position; }
 
         /**
          *
          * @brief Set the angle attribute with the given x, y and z coordinate.
-         * @param x Initial tilt angle in degree of X axis
-         * @param y Initial tilt angle in degree of Y axis
-         * @param z Initial tilt angle in degree of Z axis
+         * @param angle Instance of Angle class
          */
-        void setAngle(float x = 0, float y = 0, float z = 0) { _angle = Angle(x, y, z); }
+        void setAngle(Angle angle) { _angle = angle; }
 
         /**
          *
          * @brief Set the max angle attribute with the given x, y and coordinate.
-         * @param x Maximum tilt angle in degree of X axis
-         * @param y Maximum tilt angle in degree of Y axis
-         * @param z Maximum tilt angle in degree of Z axis
+         * @param maxAngle Instance of MaxAngle class
          */
-        void setMaxAngle(float x = 0, float y = 0, float z = 0) { _maxAngle = MaxAngle(x, y, z); }
+        void setMaxAngle(MaxAngle maxAngle) { _maxAngle = maxAngle; }
 
         private:
         std::shared_ptr<std::string> _name;

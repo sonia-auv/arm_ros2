@@ -13,7 +13,7 @@ joints:
       y: 2.0
       z: 3.0
   - B:
-    postion:
+    position:
       x: 1.0
       y: 2.0
       z: 3.0

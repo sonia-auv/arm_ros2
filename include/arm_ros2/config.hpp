@@ -37,7 +37,7 @@
 #include <arm_ros2/config/joint.hpp>
 #include <memory>
 #include <optional>
-#include <string>
+#include <string_view>
 #include <unordered_map>
 #include <variant>
 
@@ -133,6 +133,8 @@ namespace arm_ros2
          */
         const std::unordered_map<std::shared_ptr<std::string>, Joint>& getJoints() const noexcept { return _joints; }
 
+	void insertJoint(Joint joint) noexcept { _joints.insert({ joint.getNamePtr(), joint }); }
+
         /**
          *
          * @brief Get the gripper of the given instance.
@@ -140,6 +142,12 @@ namespace arm_ros2
         const Gripper& getGripper() const noexcept { return _gripper; }
 
         private:
+        template <class CoordinateCompatible>
+        [[nodiscard]] ParserErrorOr parseJointCoordinate(const YAML::Node& node, CoordinateCompatible& coordinate,
+                                                         const char* key) noexcept;
+        [[nodiscard]] ParserErrorOr parseJointMaxAngle(const YAML::Node& node, MaxAngle& maxAngle) noexcept;
+        [[nodiscard]] ParserErrorOr parseJointAngle(const YAML::Node& node, Angle& angle) noexcept;
+        [[nodiscard]] ParserErrorOr parseJointPosition(const YAML::Node& node, Position& position) noexcept;
         [[nodiscard]] ParserErrorOr parseJoint(const YAML::Node& node) noexcept;
         [[nodiscard]] ParserErrorOr parseJoints(const YAML::Node& node) noexcept;
         [[nodiscard]] ParserErrorOr parseGripper(const YAML::Node& node) noexcept;

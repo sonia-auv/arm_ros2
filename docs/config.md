@@ -35,7 +35,7 @@ of the arm. A collection is expected, giving a unique name to
 each of the joints that make up the arm.
 
 ```
-joints: map
+joints: sequence
 ```
 
 #### position
