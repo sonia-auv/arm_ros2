@@ -47,14 +47,14 @@ namespace arm_ros2
          *
          * @brief Get state of the given instance.
          */
-        State getState() const noexcept { return _state; }
+        inline State getState() const noexcept { return _state; }
 
         /**
          *
          * @brief Set state of the given instance.
          * @param state State of the gripper
          */
-        void setState(State state) noexcept { _state = state; }
+        inline void setState(State state) noexcept { _state = state; }
 
         private:
         State _state;

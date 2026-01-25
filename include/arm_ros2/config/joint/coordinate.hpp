@@ -45,37 +45,37 @@ namespace arm_ros2
          *
          * @brief Get _x attribute.
          */
-        V getX() const noexcept { return _x; }
+        inline V getX() const noexcept { return _x; }
 
         /**
          *
          * @brief Get _y attribute.
          */
-        V getY() const noexcept { return _y; }
+        inline V getY() const noexcept { return _y; }
 
         /**
          *
          * @brief Get _z attribute.
          */
-        V getZ() const noexcept { return _z; }
+        inline V getZ() const noexcept { return _z; }
 
         /**
          *
          * @brief Set _x attribute.
          */
-        void setX(V x) noexcept { _x = x; }
+        inline void setX(V x) noexcept { _x = x; }
 
         /**
          *
          * @brief Set _y attribute.
          */
-        void setY(V y) noexcept { _y = y; }
+        inline void setY(V y) noexcept { _y = y; }
 
         /**
          *
          * @brief Set _z attribute.
          */
-        void setZ(V z) noexcept { _z = z; }
+        inline void setZ(V z) noexcept { _z = z; }
 
         private:
         V _x;

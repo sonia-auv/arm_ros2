@@ -49,52 +49,52 @@ namespace arm_ros2
          *
          * @brief Get the name of the instance.
          */
-        const std::string& getName() const { return *_name; }
+        inline const std::string& getName() const { return *_name; }
 
         /**
          *
          * @brief Get the name pointer of the instance.
          */
-        std::shared_ptr<std::string> getNamePtr() const { return _name; }
+        inline std::shared_ptr<std::string> getNamePtr() const { return _name; }
 
         /**
          *
          * @brief Get the position of the instance.
          */
-        const Position& getPosition() const { return _position; }
+        inline const Position& getPosition() const { return _position; }
 
         /**
          *
          * @brief Get the angle of the instance.
          */
-        const Angle& getAngle() const { return _angle; }
+        inline const Angle& getAngle() const { return _angle; }
 
         /**
          *
          * @brief Get the max angle of the instance.
          */
-        const MaxAngle& getMaxAngle() const { return _maxAngle; }
+        inline const MaxAngle& getMaxAngle() const { return _maxAngle; }
 
         /**
          *
          * @brief Set the position attribute with the given x, y and coordinate.
          * @param position Instance of Position class
          */
-        void setPosition(Position position) { _position = position; }
+        inline void setPosition(Position position) { _position = position; }
 
         /**
          *
          * @brief Set the angle attribute with the given x, y and z coordinate.
          * @param angle Instance of Angle class
          */
-        void setAngle(Angle angle) { _angle = angle; }
+        inline void setAngle(Angle angle) { _angle = angle; }
 
         /**
          *
          * @brief Set the max angle attribute with the given x, y and coordinate.
          * @param maxAngle Instance of MaxAngle class
          */
-        void setMaxAngle(MaxAngle maxAngle) { _maxAngle = maxAngle; }
+        inline void setMaxAngle(MaxAngle maxAngle) { _maxAngle = maxAngle; }
 
         private:
         std::shared_ptr<std::string> _name;
