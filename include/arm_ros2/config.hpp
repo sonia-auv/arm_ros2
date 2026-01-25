@@ -55,21 +55,33 @@ namespace arm_ros2
             {
                 _AlreadyParsed() {}
 
-                operator std::string() const noexcept { return "Already parsed"; }
+                /**
+                 *
+                 * @brief Convert _AlreadyParsed type to std::string.
+                 */
+                explicit operator std::string() const noexcept { return "Already parsed"; }
             };
 
             struct _BadFile final
             {
                 _BadFile() {}
 
-                operator std::string() const noexcept { return "Bad file: not found or something else wrong"; }
+                /**
+                 *
+                 * @brief Convert _BadFile type to std::string.
+                 */
+                explicit operator std::string() const noexcept { return "Bad file: not found or something else wrong"; }
             };
 
             struct _Syntax final
             {
                 _Syntax(std::string details) : _details(details) {}
 
-                operator std::string() const noexcept;
+                /**
+                 *
+                 * @brief Convert _Syntax type to std::string.
+                 */
+                explicit operator std::string() const noexcept;
 
                 private:
                 std::string _details;
@@ -79,7 +91,11 @@ namespace arm_ros2
             {
                 _BadConfig(std::string details) : _details(details) {}
 
-                operator std::string() const noexcept;
+                /**
+                 *
+                 * @brief Convert _BadConfig type to std::string.
+                 */
+                explicit operator std::string() const noexcept;
 
                 private:
                 std::string _details;
@@ -89,7 +105,11 @@ namespace arm_ros2
             {
                 _Other(std::string message) : _message(message) {}
 
-                operator std::string() const noexcept;
+                /**
+                 *
+                 * @brief Convert _Other type to std::string.
+                 */
+                explicit operator std::string() const noexcept;
 
                 private:
                 std::string _message;
@@ -100,19 +120,49 @@ namespace arm_ros2
             ParserError(Value value) : _value(value) {}
             ~ParserError() = default;
 
-            static ParserError AlreadyParsed() { return ParserError(Value(std::in_place_type<_AlreadyParsed>)); }
+            /**
+             *
+             * @brief Returns AlreadyParsed variant of ParserError type.
+             */
+            static inline ParserError AlreadyParsed() { return ParserError(Value(std::in_place_type<_AlreadyParsed>)); }
 
-            static ParserError BadFile() { return ParserError(Value(std::in_place_type<_BadFile>)); }
+            /**
+             *
+             * @brief Returns BadFile variant of ParserError type.
+             */
+            static inline ParserError BadFile() { return ParserError(Value(std::in_place_type<_BadFile>)); }
 
-            static ParserError Syntax(_Syntax value) { return ParserError(Value(std::in_place_type<_Syntax>, value)); }
+            /**
+             *
+             * @brief Returns Syntax variant of ParserError type.
+             */
+            static inline ParserError Syntax(_Syntax value)
+            {
+                return ParserError(Value(std::in_place_type<_Syntax>, value));
+            }
 
-            static ParserError BadConfig(_BadConfig value)
+            /**
+             *
+             * @brief Returns BadConfig variant of ParserError type.
+             */
+            static inline ParserError BadConfig(_BadConfig value)
             {
                 return ParserError(Value(std::in_place_type<_BadConfig>, value));
             }
 
-            static ParserError Other(_Other value) { return ParserError(Value(std::in_place_type<_Other>, value)); }
+            /**
+             *
+             * @brief Returns Other variant of ParserError type.
+             */
+            static inline ParserError Other(_Other value)
+            {
+                return ParserError(Value(std::in_place_type<_Other>, value));
+            }
 
+            /**
+             *
+             * @brief Convert ParserError type to std::string.
+             */
             explicit operator std::string() const noexcept;
 
             private:
@@ -133,6 +183,11 @@ namespace arm_ros2
          */
         const std::unordered_map<std::shared_ptr<std::string>, Joint>& getJoints() const noexcept { return _joints; }
 
+        /**
+         *
+         * @brief Insert joint into _joints unordered map.
+         * @param joint The joint to insert.
+         */
         void insertJoint(Joint joint) noexcept { _joints.insert({joint.getNamePtr(), joint}); }
 
         /**
