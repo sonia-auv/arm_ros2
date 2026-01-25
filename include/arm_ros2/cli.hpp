@@ -39,8 +39,8 @@ namespace arm_ros2
     {
         /**
          *
-         * @param argc Number of argument provided.
-         * @param argv
+         * @param argc Number of argument provided by the CLI.
+         * @param argv Arguments provided by the CLI.
          */
         static int run(int argc, char **argv);
 

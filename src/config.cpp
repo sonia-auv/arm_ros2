@@ -339,7 +339,7 @@ namespace arm_ros2
             }
         }
 
-	_isInitialized = true;
+        _isInitialized = true;
 
         return {};
     }
