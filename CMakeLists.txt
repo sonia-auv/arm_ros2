@@ -9,6 +9,7 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
 if(BUILD_TESTING)
@@ -23,8 +24,13 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/src)
+add_executable(${PROJECT_NAME}
+	${CMAKE_SOURCE_DIR}/src/cli.cpp
+	${CMAKE_SOURCE_DIR}/src/config.cpp
+	${CMAKE_SOURCE_DIR}/src/main.cpp
+	${CMAKE_SOURCE_DIR}/src/ros/node/arm.cpp)
+target_link_libraries(${PROJECT_NAME} yaml-cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-ament_target_dependencies(${PROJECT_NAME} yaml-cpp)
-
+ament_target_dependencies(${PROJECT_NAME} rclcpp yaml-cpp)
 ament_package()
