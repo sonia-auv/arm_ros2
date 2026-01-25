@@ -31,6 +31,8 @@
 
 #pragma once
 
+#include <arm_ros2/config.hpp>
+#include <arm_ros2/ros/node/joint.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
@@ -47,7 +49,16 @@ namespace arm_ros2::ros::node
          */
         static std::shared_ptr<Arm> getInstance();
 
+        /**
+         *
+         * @brief Set ROS joint nodes from a given configuration.
+         * @param config Configuration of the arm.
+         */
+        void setJointNodes(const Config& config);
+
         private:
         Arm() : rclcpp::Node("arm") {}
+
+        std::vector<std::shared_ptr<Joint>> _jointNodes;
     };
 }  // namespace arm_ros2::ros::node

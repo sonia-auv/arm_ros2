@@ -33,11 +33,14 @@
 
 #include <arm_ros2/cli.hpp>
 #include <arm_ros2/config.hpp>
+#include <arm_ros2/ros/node.hpp>
 #include <iostream>
 
-namespace arm_ros2
+namespace arm_ros2::cli
 {
-    int Cli::run(int argc, char **argv)
+    static void emitError(std::string_view message);
+
+    int run(int argc, char **argv)
     {
 #define DEFAULT_CONFIG_PATH "config/config.yaml"
 
@@ -64,10 +67,10 @@ namespace arm_ros2
             return EXIT_FAILURE;
         }
 
-        return EXIT_SUCCESS;
+        return ros::node::init(config);
 
 #undef DEFAULT_CONFIG_PATH
     }
 
-    void Cli::emitError(std::string_view message) { std::cerr << "\x1b[31mError\x1b[0m: " << message << std::endl; }
-}  // namespace arm_ros2
+    void emitError(std::string_view message) { std::cerr << "\x1b[31mError\x1b[0m: " << message << std::endl; }
+}  // namespace arm_ros2::cli

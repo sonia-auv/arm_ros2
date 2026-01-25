@@ -28,6 +28,7 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/cli.cpp
 	${CMAKE_SOURCE_DIR}/src/config.cpp
 	${CMAKE_SOURCE_DIR}/src/main.cpp
+	${CMAKE_SOURCE_DIR}/src/ros/node.cpp
 	${CMAKE_SOURCE_DIR}/src/ros/node/arm.cpp)
 target_link_libraries(${PROJECT_NAME} yaml-cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)

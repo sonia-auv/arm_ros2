@@ -39,4 +39,18 @@ namespace arm_ros2::ros::node
 
         return instance;
     }
+
+    void Arm::setJointNodes(const Config& config)
+    {
+        auto configJoints = config.getJoints();
+
+        _jointNodes.reserve(configJoints.size());
+
+        for (const auto& [_, configJoint] : configJoints)
+        {
+            std::shared_ptr<Joint> joint(new Joint(configJoint.getName()));
+
+            _jointNodes.push_back(joint);
+        }
+    }
 }  // namespace arm_ros2::ros::node

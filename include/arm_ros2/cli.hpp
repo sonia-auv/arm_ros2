@@ -33,18 +33,12 @@
 
 #include <string_view>
 
-namespace arm_ros2
+namespace arm_ros2::cli
 {
-    struct Cli
-    {
-        /**
-         *
-         * @param argc Number of argument provided by the CLI.
-         * @param argv Arguments provided by the CLI.
-         */
-        static int run(int argc, char **argv);
-
-        private:
-        static void emitError(std::string_view message);
-    };
-}  // namespace arm_ros2
+    /**
+     *
+     * @param argc Number of argument provided by the CLI.
+     * @param argv Arguments provided by the CLI.
+     */
+    int run(int argc, char **argv);
+}  // namespace arm_ros2::cli

@@ -31,6 +31,4 @@
 
 #include <arm_ros2/cli.hpp>
 
-using namespace arm_ros2;
-
-int main(int argc, char **argv) { return Cli::run(argc, argv); }
+int main(int argc, char **argv) { return arm_ros2::cli::run(argc, argv); }

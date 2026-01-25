@@ -29,18 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
-#include <arm_ros2/config.hpp>
-#include <arm_ros2/ros/node/arm.hpp>
-#include <arm_ros2/ros/node/joint.hpp>
+#include <arm_ros2/ros/node.hpp>
 
 namespace arm_ros2::ros::node
 {
-    /**
-     *
-     * @brief Init all ROS nodes.
-     * @param config Configuration of the arm.
-     */
-    int init(const Config& config);
+    int init(const Config& config)
+    {
+        auto armNode = Arm::getInstance();
+
+        armNode->setJointNodes(config);
+
+        return EXIT_SUCCESS;
+    }
 }  // namespace arm_ros2::ros::node
