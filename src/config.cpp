@@ -296,7 +296,7 @@ namespace arm_ros2
 
     Config::ParserErrorOr Config::parse(const std::string &filename) noexcept
     {
-        if (_is_initialized)
+        if (_isInitialized)
         {
             return Config::ParserError::AlreadyParsed();
         }
@@ -338,6 +338,8 @@ namespace arm_ros2
                 return parserError;
             }
         }
+
+	_isInitialized = true;
 
         return {};
     }

@@ -210,6 +210,6 @@ namespace arm_ros2
 
         std::unordered_map<std::shared_ptr<std::string>, Joint> _joints;
         Gripper _gripper;
-        bool _is_initialized = false;
+        bool _isInitialized = false;
     };
 }  // namespace arm_ros2
