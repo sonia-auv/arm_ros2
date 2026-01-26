@@ -37,7 +37,7 @@
 #include <memory>
 #include <string>
 
-namespace arm_ros2
+namespace arm_ros2::config
 {
     class Joint final
     {
@@ -61,45 +61,45 @@ namespace arm_ros2
          *
          * @brief Get the position of the instance.
          */
-        inline const Position& getPosition() const { return _position; }
+        inline const joint::Position& getPosition() const { return _position; }
 
         /**
          *
          * @brief Get the angle of the instance.
          */
-        inline const Angle& getAngle() const { return _angle; }
+        inline const joint::Angle& getAngle() const { return _angle; }
 
         /**
          *
          * @brief Get the max angle of the instance.
          */
-        inline const MaxAngle& getMaxAngle() const { return _maxAngle; }
+        inline const joint::MaxAngle& getMaxAngle() const { return _maxAngle; }
 
         /**
          *
          * @brief Set the position attribute with the given x, y and coordinate.
-         * @param position Instance of Position class
+         * @param position Instance of joint::Position class
          */
-        inline void setPosition(Position position) { _position = position; }
+        inline void setPosition(joint::Position position) { _position = position; }
 
         /**
          *
          * @brief Set the angle attribute with the given x, y and z coordinate.
-         * @param angle Instance of Angle class
+         * @param angle Instance of joint::Angle class
          */
-        inline void setAngle(Angle angle) { _angle = angle; }
+        inline void setAngle(joint::Angle angle) { _angle = angle; }
 
         /**
          *
          * @brief Set the max angle attribute with the given x, y and coordinate.
-         * @param maxAngle Instance of MaxAngle class
+         * @param maxAngle Instance of joint::MaxAngle class
          */
-        inline void setMaxAngle(MaxAngle maxAngle) { _maxAngle = maxAngle; }
+        inline void setMaxAngle(joint::MaxAngle maxAngle) { _maxAngle = maxAngle; }
 
         private:
         std::shared_ptr<std::string> _name;
-        Position _position;
-        Angle _angle;
-        MaxAngle _maxAngle;
+        joint::Position _position;
+        joint::Angle _angle;
+        joint::MaxAngle _maxAngle;
     };
-}  // namespace arm_ros2
+}  // namespace arm_ros2::config

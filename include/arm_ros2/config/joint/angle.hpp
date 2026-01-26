@@ -33,7 +33,7 @@
 
 #include <arm_ros2/config/joint/coordinate.hpp>
 
-namespace arm_ros2
+namespace arm_ros2::config::joint
 {
     class AngleBase : public Coordinate<float>
     {
@@ -44,4 +44,4 @@ namespace arm_ros2
     {
         using AngleBase::AngleBase;
     };
-}  // namespace arm_ros2
+}  // namespace arm_ros2::config::joint

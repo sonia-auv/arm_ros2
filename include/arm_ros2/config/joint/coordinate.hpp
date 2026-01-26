@@ -31,7 +31,7 @@
 
 #pragma once
 
-namespace arm_ros2
+namespace arm_ros2::config::joint
 {
     template <typename V>
     class Coordinate
@@ -82,4 +82,4 @@ namespace arm_ros2
         V _y;
         V _z;
     };
-}  // namespace arm_ros2
+}  // namespace arm_ros2::config::joint

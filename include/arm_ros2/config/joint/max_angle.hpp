@@ -33,10 +33,10 @@
 
 #include <arm_ros2/config/joint/angle.hpp>
 
-namespace arm_ros2
+namespace arm_ros2::config::joint
 {
     class MaxAngle final : public AngleBase
     {
         using AngleBase::AngleBase;
     };
-}  // namespace arm_ros2
+}  // namespace arm_ros2::config::joint

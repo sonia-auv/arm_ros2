@@ -33,10 +33,10 @@
 
 #include <arm_ros2/config/joint/coordinate.hpp>
 
-namespace arm_ros2
+namespace arm_ros2::config::joint
 {
     class Position final : public Coordinate<float>
     {
         using Coordinate<float>::Coordinate;
     };
-}  // namespace arm_ros2
+}  // namespace arm_ros2::config::joint

@@ -181,35 +181,40 @@ namespace arm_ros2
          *
          * @brief Get the joints of the given instance.
          */
-        const std::unordered_map<std::shared_ptr<std::string>, Joint>& getJoints() const noexcept { return _joints; }
+        const std::unordered_map<std::shared_ptr<std::string>, config::Joint>& getJoints() const noexcept
+        {
+            return _joints;
+        }
 
         /**
          *
          * @brief Insert joint into _joints unordered map.
          * @param joint The joint to insert.
          */
-        void insertJoint(Joint joint) noexcept { _joints.insert({joint.getNamePtr(), joint}); }
+        void insertJoint(config::Joint joint) noexcept { _joints.insert({joint.getNamePtr(), joint}); }
 
         /**
          *
          * @brief Get the gripper of the given instance.
          */
-        const Gripper& getGripper() const noexcept { return _gripper; }
+        const config::Gripper& getGripper() const noexcept { return _gripper; }
 
         private:
         template <class CoordinateCompatible>
         [[nodiscard]] ParserErrorOr parseJointCoordinate(const YAML::Node& node, CoordinateCompatible& coordinate,
                                                          const char* key) noexcept;
-        [[nodiscard]] ParserErrorOr parseJointMaxAngle(const YAML::Node& node, MaxAngle& maxAngle) noexcept;
-        [[nodiscard]] ParserErrorOr parseJointAngle(const YAML::Node& node, Angle& angle) noexcept;
-        [[nodiscard]] ParserErrorOr parseJointPosition(const YAML::Node& node, Position& position) noexcept;
+        [[nodiscard]] ParserErrorOr parseJointMaxAngle(const YAML::Node& node,
+                                                       config::joint::MaxAngle& maxAngle) noexcept;
+        [[nodiscard]] ParserErrorOr parseJointAngle(const YAML::Node& node, config::joint::Angle& angle) noexcept;
+        [[nodiscard]] ParserErrorOr parseJointPosition(const YAML::Node& node,
+                                                       config::joint::Position& position) noexcept;
         [[nodiscard]] ParserErrorOr parseJoint(const YAML::Node& node) noexcept;
         [[nodiscard]] ParserErrorOr parseJoints(const YAML::Node& node) noexcept;
         [[nodiscard]] ParserErrorOr parseGripperState(const YAML::Node& node) noexcept;
         [[nodiscard]] ParserErrorOr parseGripper(const YAML::Node& node) noexcept;
 
-        std::unordered_map<std::shared_ptr<std::string>, Joint> _joints;
-        Gripper _gripper;
+        std::unordered_map<std::shared_ptr<std::string>, config::Joint> _joints;
+        config::Gripper _gripper;
         bool _isInitialized = false;
     };
 }  // namespace arm_ros2

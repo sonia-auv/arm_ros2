@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace arm_ros2
+namespace arm_ros2::config
 {
     class Gripper final
     {
@@ -59,4 +59,4 @@ namespace arm_ros2
         private:
         State _state;
     };
-};  // namespace arm_ros2
+};  // namespace arm_ros2::config

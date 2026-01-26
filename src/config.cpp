@@ -86,7 +86,7 @@ namespace arm_ros2
                                                                      const char *key) noexcept
     {
         using CoordinateValue = float;
-        static_assert(std::is_base_of_v<Coordinate<CoordinateValue>, CoordinateCompatible>,
+        static_assert(std::is_base_of_v<config::joint::Coordinate<CoordinateValue>, CoordinateCompatible>,
                       "`CoordinateCompatible` is not the base of `Coordinate`");
 
         const YAML::Node &coordinateNode = node[key];
@@ -151,19 +151,22 @@ namespace arm_ros2
         return {};
     }
 
-    [[nodiscard]] Config::ParserErrorOr Config::parseJointMaxAngle(const YAML::Node &node, MaxAngle &maxAngle) noexcept
+    [[nodiscard]] Config::ParserErrorOr Config::parseJointMaxAngle(const YAML::Node &node,
+                                                                   config::joint::MaxAngle &maxAngle) noexcept
     {
-        return parseJointCoordinate<MaxAngle>(node, maxAngle, "maxAngle");
+        return parseJointCoordinate<config::joint::MaxAngle>(node, maxAngle, "maxAngle");
     }
 
-    [[nodiscard]] Config::ParserErrorOr Config::parseJointAngle(const YAML::Node &node, Angle &angle) noexcept
+    [[nodiscard]] Config::ParserErrorOr Config::parseJointAngle(const YAML::Node &node,
+                                                                config::joint::Angle &angle) noexcept
     {
-        return parseJointCoordinate<Angle>(node, angle, "angle");
+        return parseJointCoordinate<config::joint::Angle>(node, angle, "angle");
     }
 
-    [[nodiscard]] Config::ParserErrorOr Config::parseJointPosition(const YAML::Node &node, Position &position) noexcept
+    [[nodiscard]] Config::ParserErrorOr Config::parseJointPosition(const YAML::Node &node,
+                                                                   config::joint::Position &position) noexcept
     {
-        return parseJointCoordinate<Position>(node, position, "position");
+        return parseJointCoordinate<config::joint::Position>(node, position, "position");
     }
 
     [[nodiscard]] Config::ParserErrorOr Config::parseJoint(const YAML::Node &node) noexcept
@@ -178,10 +181,10 @@ namespace arm_ros2
 
         std::pair<const YAML::Node &, const YAML::Node &> keyValue = *(node.begin());
         std::string jointName = keyValue.first.as<std::string>();
-        Joint joint(std::move(jointName));
-        Position position;
-        Angle angle;
-        MaxAngle maxAngle;
+        config::Joint joint(std::move(jointName));
+        config::joint::Position position;
+        config::joint::Angle angle;
+        config::joint::MaxAngle maxAngle;
         std::function<Config::ParserErrorOr(void)> parseJointItemFns[] = {
             std::bind(&Config::parseJointPosition, *this, node, position),
             std::bind(&Config::parseJointAngle, *this, node, angle),
@@ -245,11 +248,11 @@ namespace arm_ros2
 
             if (stateValue == "Close")
             {
-                _gripper.setState(Gripper::State::Close);
+                _gripper.setState(config::Gripper::State::Close);
             }
             else if (stateValue == "Open")
             {
-                _gripper.setState(Gripper::State::Open);
+                _gripper.setState(config::Gripper::State::Open);
             }
             else
             {
