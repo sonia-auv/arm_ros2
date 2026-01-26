@@ -35,7 +35,7 @@
 
 namespace arm_ros2::ros::node
 {
-    class Joint : public rclcpp::Node
+    class Joint final : public rclcpp::Node
     {
         public:
         Joint(std::string name) : rclcpp::Node(name) {}

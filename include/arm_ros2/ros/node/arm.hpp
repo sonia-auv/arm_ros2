@@ -38,7 +38,7 @@
 
 namespace arm_ros2::ros::node
 {
-    class Arm : public rclcpp::Node
+    class Arm final : public rclcpp::Node
     {
         public:
         ~Arm() = default;
