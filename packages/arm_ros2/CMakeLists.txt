@@ -11,10 +11,6 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(unique_identifier_msgs REQUIRED)
-find_package(builtin_interfaces REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-find_package(action_msgs REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -36,10 +32,6 @@ add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/ros/node/arm.cpp)
 target_link_libraries(${PROJECT_NAME} yaml-cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
-
-rosidl_generate_interfaces(${PROJECT_NAME}_interfaces
-	include/arm_ros2/ros/action/ArmControl.action
-	DEPENDENCIES unique_identifier_msgs builtin_interfaces action_msgs)
 
 ament_target_dependencies(${PROJECT_NAME} rclcpp yaml-cpp)
 ament_package()
