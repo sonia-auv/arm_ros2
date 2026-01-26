@@ -1,19 +1,9 @@
 # arm_ros2
 
-## Dependencies
+## Packages
 
-### ROS 2 Distro
-
-- Humble
-
-### ROS 2 Packages
-
-- [`ament_cmake`](https://github.com/ament/ament_cmake)
-- [`rclcpp`](https://github.com/ros2/rclcpp)
-
-### External packages
-
-- [`yaml-cpp`](https://github.com/jbeder/yaml-cpp)
+- [arm_ros2](packages/arm_ros2/)
+- [arm_ros2_interfaces](packages/arm_ros2_interfaces/)
 
 ## Registered Topics / Services / Actions
 
