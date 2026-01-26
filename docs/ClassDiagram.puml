@@ -19,11 +19,11 @@ Class "std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>" as a
 Struct arm_ros2::ParserError {
   +ParserError(Value value)
   +\~ParserError()
-  +ParserError AlreadyParsed()
-  +ParserError BadFile()
-  +ParserError Syntax(_Syntax value)
-  +ParserError BadConfig(_BadConfig value)
-  +ParserError Other(_Other value)
+  +{static} ParserError AlreadyParsed()
+  +{static} ParserError BadFile()
+  +{static} ParserError Syntax(_Syntax value)
+  +{static} ParserError BadConfig(_BadConfig value)
+  +{static} ParserError Other(_Other value)
   +operator std::string()
   -Value _value
 }
