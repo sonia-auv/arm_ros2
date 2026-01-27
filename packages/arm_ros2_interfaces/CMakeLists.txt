@@ -10,6 +10,9 @@ find_package(action_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}_interfaces
 	action/ArmControl.action
+	msg/ArmStatus.msg
+	msg/GripperStatus.msg
+	msg/JointStatus.msg
 	DEPENDENCIES unique_identifier_msgs builtin_interfaces action_msgs)
 
 ament_package()
