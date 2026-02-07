@@ -32,7 +32,7 @@
 #pragma once
 
 #include <arm_ros2/config.hpp>
-#include <arm_ros2/ros/arm_control.hpp>
+#include <arm_ros2/ros/action/arm_control_server.hpp>
 #include <arm_ros2/ros/node/joint.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
@@ -61,6 +61,6 @@ namespace arm_ros2::ros::node
         Arm() : rclcpp::Node("arm"), _control(this) {}
 
         std::vector<std::shared_ptr<Joint>> _jointNodes;
-        ArmControl<Arm> _control;
+        action::ArmControlServer<Arm> _control;
     };
 }  // namespace arm_ros2::ros::node

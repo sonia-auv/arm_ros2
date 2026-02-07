@@ -36,21 +36,21 @@
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
 
-namespace arm_ros2::ros
+namespace arm_ros2::ros::action
 {
     template <typename NodeT>
-    class ArmControl
+    class ArmControlServer
     {
         public:
-        ArmControl(NodeT* node)
+        ArmControlServer(NodeT* node)
         {
             _server = rclcpp_action::create_server<arm_ros2_interfaces::action::ArmControl>(
                 node, "ArmControl",
-                std::bind(&ArmControl::handleGoal, this, std::placeholders::_1, std::placeholders::_2),
-                std::bind(&ArmControl::handleCancel, this, std::placeholders::_1),
-                std::bind(&ArmControl::handleAccepted, this, std::placeholders::_1));
+                std::bind(&ArmControlServer::handleGoal, this, std::placeholders::_1, std::placeholders::_2),
+                std::bind(&ArmControlServer::handleCancel, this, std::placeholders::_1),
+                std::bind(&ArmControlServer::handleAccepted, this, std::placeholders::_1));
         }
-        ~ArmControl() = default;
+        ~ArmControlServer() = default;
 
         private:
         using ActionArmControl = arm_ros2_interfaces::action::ArmControl;
