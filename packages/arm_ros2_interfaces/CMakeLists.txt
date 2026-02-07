@@ -12,7 +12,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}_interfaces
 	action/ArmControl.action
 	msg/ArmStatus.msg
 	msg/GripperStatus.msg
+	msg/InverseKinematicsCalculatorResult.msg
 	msg/JointStatus.msg
+	srv/InverseKinematicsCalculator.srv
 	DEPENDENCIES unique_identifier_msgs builtin_interfaces action_msgs)
 
 ament_package()
