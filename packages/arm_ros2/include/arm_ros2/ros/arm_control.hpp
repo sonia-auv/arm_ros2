@@ -31,36 +31,56 @@
 
 #pragma once
 
-#include <arm_ros2/config.hpp>
-#include <arm_ros2/ros/arm_control.hpp>
-#include <arm_ros2/ros/node/joint.hpp>
-#include <memory>
+#include <arm_ros2_interfaces/action/arm_control.hpp>
+#include <functional>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_action/rclcpp_action.hpp>
 
-namespace arm_ros2::ros::node
+namespace arm_ros2::ros
 {
-    class Arm final : public rclcpp::Node
+    template <typename NodeT>
+    class ArmControl
     {
         public:
-        ~Arm() = default;
-
-        /**
-         *
-         * @brief Return a static initialization of the Arm class.
-         */
-        static std::shared_ptr<Arm> getInstance();
-
-        /**
-         *
-         * @brief Set ROS joint nodes from a given configuration.
-         * @param config Configuration of the arm.
-         */
-        void setJointNodes(const Config& config);
+        ArmControl(NodeT* node)
+        {
+            _server = rclcpp_action::create_server<arm_ros2_interfaces::action::ArmControl>(
+                node, "ArmControl",
+                std::bind(&ArmControl::handleGoal, this, std::placeholders::_1, std::placeholders::_2),
+                std::bind(&ArmControl::handleCancel, this, std::placeholders::_1),
+                std::bind(&ArmControl::handleAccepted, this, std::placeholders::_1));
+        }
+        ~ArmControl() = default;
 
         private:
-        Arm() : rclcpp::Node("arm"), _control(this) {}
+        using ActionArmControl = arm_ros2_interfaces::action::ArmControl;
+        using GoalHandle = rclcpp_action::ServerGoalHandle<ActionArmControl>;
 
-        std::vector<std::shared_ptr<Joint>> _jointNodes;
-        ArmControl<Arm> _control;
+        /**
+         *
+         * @brief Handle goal of `ArmControl` action.
+         */
+        rclcpp_action::GoalResponse handleGoal(const rclcpp_action::GoalUUID&,
+                                               std::shared_ptr<const ActionArmControl::Goal>) const
+        {
+            return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+        }
+
+        /**
+         *
+         * @brief Handle cancel of `ArmControl` action.
+         */
+        rclcpp_action::CancelResponse handleCancel(const std::shared_ptr<GoalHandle>) const
+        {
+            return rclcpp_action::CancelResponse::ACCEPT;
+        }
+
+        /**
+         *
+         * @brief Handle accept of `ArmControl` action.
+         */
+        void handleAccepted(const std::shared_ptr<GoalHandle>) const {}
+
+        rclcpp_action::Server<arm_ros2_interfaces::action::ArmControl>::SharedPtr _server;
     };
-}  // namespace arm_ros2::ros::node
+}  // namespace arm_ros2::ros
