@@ -33,8 +33,10 @@
 
 #include <arm_ros2/config.hpp>
 #include <arm_ros2/ros/node/joint.hpp>
+#include <arm_ros2_interfaces/action/arm_control.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_action/rclcpp_action.hpp>
 
 namespace arm_ros2::ros::node
 {
@@ -60,5 +62,6 @@ namespace arm_ros2::ros::node
         Arm() : rclcpp::Node("arm") {}
 
         std::vector<std::shared_ptr<Joint>> _jointNodes;
+        rclcpp_action::Server<arm_ros2_interfaces::action::ArmControl>::SharedPtr _server;
     };
 }  // namespace arm_ros2::ros::node
