@@ -1,2 +1,2 @@
-JointStatus joint_status
+JointStatus[] joint_status
 bool success
