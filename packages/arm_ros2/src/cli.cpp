@@ -67,7 +67,13 @@ namespace arm_ros2::cli
             return EXIT_FAILURE;
         }
 
-        return ros::node::init(config);
+        rclcpp::init(argc, argv);
+
+        auto res = ros::node::init(config);
+
+        rclcpp::shutdown();
+
+        return res;
 
 #undef DEFAULT_CONFIG_PATH
     }

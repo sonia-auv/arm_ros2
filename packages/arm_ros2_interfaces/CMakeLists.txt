@@ -8,7 +8,7 @@ find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(action_msgs REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}_interfaces
+rosidl_generate_interfaces(${PROJECT_NAME}
 	action/ArmControl.action
 	msg/ArmStatus.msg
 	msg/GripperStatus.msg
