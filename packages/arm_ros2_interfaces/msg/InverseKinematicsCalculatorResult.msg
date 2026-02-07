@@ -1,4 +1,2 @@
-float64 angle
-float64 x
-float64 y
-float64 z
+JointStatus joint_status
+bool success
