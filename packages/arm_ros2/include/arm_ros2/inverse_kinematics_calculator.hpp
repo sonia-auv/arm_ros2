@@ -31,14 +31,20 @@
 
 #pragma once
 
+#include <arm_ros2/config.hpp>
+#include <arm_ros2_interfaces/msg/inverse_kinematics_calculator_result.hpp>
+
 namespace arm_ros2::inverse_kinematics_calculator
 {
+    using Result = arm_ros2_interfaces::msg::InverseKinematicsCalculatorResult;
+
     /**
      *
      * @brief Perform an inverse kinematics calculation from X, Y and Z coordinate.
+     * @param config Configuration of the arm.
      * @param x Position of the gripper according X axis.
      * @param y Position of the gripper according Y axis.
      * @param z Position of the gripper according Z axis.
      */
-    void calculate(float x, float y, float z);
+    Result calculate(std::shared_ptr<Config> config, float x, float y, float z);
 }  // namespace arm_ros2::inverse_kinematics_calculator

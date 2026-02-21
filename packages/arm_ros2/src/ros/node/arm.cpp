@@ -40,9 +40,10 @@ namespace arm_ros2::ros::node
         return instance;
     }
 
-    void Arm::setJointNodes(const Config& config)
+    void Arm::setJointNodes()
     {
-        auto configJoints = config.getJoints();
+        auto config = _config.value();
+        auto configJoints = config->getJoints();
 
         _jointNodes.reserve(configJoints.size());
 

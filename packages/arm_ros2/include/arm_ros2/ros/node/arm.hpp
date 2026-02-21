@@ -36,6 +36,7 @@
 #include <arm_ros2/ros/node/joint.hpp>
 #include <arm_ros2/ros/service/inverse_kinematics_calculator.hpp>
 #include <memory>
+#include <optional>
 #include <rclcpp/rclcpp.hpp>
 
 namespace arm_ros2::ros::node
@@ -58,10 +59,22 @@ namespace arm_ros2::ros::node
 
         /**
          *
-         * @brief Set ROS joint nodes from a given configuration.
-         * @param config Configuration of the arm.
+         * @brief Set `_config` attribute.
          */
-        void setJointNodes(const Config& config);
+        void setConfig(std::shared_ptr<Config> config) { _config = config; }
+
+        /**
+         *
+         * @brief Get `_config` attribute.
+         */
+        std::optional<std::shared_ptr<Config>>& getConfig() { return _config; }
+
+        /**
+         *
+         * @brief Set ROS joint nodes from the given configuration (`_config`).
+         * @note This method can throw an exception if the value of `_config` is not yet set at this moment.
+         */
+        void setJointNodes();
 
         private:
         Arm() : rclcpp::Node("arm"), _control(this) {}
@@ -80,6 +93,7 @@ namespace arm_ros2::ros::node
 
         std::vector<std::shared_ptr<Joint>> _jointNodes;
         action::ArmControlServer<Arm> _control;
+        std::optional<std::shared_ptr<Config>> _config;
 
 #undef InverseKinematicsCalculatorArm
     };

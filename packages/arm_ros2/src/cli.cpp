@@ -35,6 +35,7 @@
 #include <arm_ros2/config.hpp>
 #include <arm_ros2/ros/node.hpp>
 #include <iostream>
+#include <memory>
 
 namespace arm_ros2::cli
 {
@@ -55,8 +56,8 @@ namespace arm_ros2::cli
             configPath = argv[1];
         }
 
-        auto config = Config();
-        auto parserError = config.parse(configPath);
+        auto config = std::make_shared<Config>(Config());
+        auto parserError = config->parse(configPath);
 
         if (parserError.has_value())
         {

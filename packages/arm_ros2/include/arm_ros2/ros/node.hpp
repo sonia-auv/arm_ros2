@@ -42,5 +42,5 @@ namespace arm_ros2::ros::node
      * @brief Init all ROS nodes.
      * @param config Configuration of the arm.
      */
-    int init(const Config& config);
+    int init(std::shared_ptr<Config> config);
 }  // namespace arm_ros2::ros::node

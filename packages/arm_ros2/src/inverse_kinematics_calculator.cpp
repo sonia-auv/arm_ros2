@@ -29,12 +29,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <arm_ros2/inverse_kinematics_calculator.hpp>
+
 namespace arm_ros2::inverse_kinematics_calculator
 {
-    void calculate(float x, float y, float z)
+    struct Context
     {
-        (void)x;
-        (void)y;
-        (void)z;
+        std::shared_ptr<Config> config;
+        float x;
+        float y;
+        float z;
+    };
+
+    /**
+     *
+     * @brief We determine if the requested position to reach, is reachable. So if so, we return true otherwise we
+     * return false.
+     */
+    static bool isReachableWorkspace(const Context &ctx);
+
+    bool isReachableWorkspace(const Context &ctx)
+    {
+        (void)ctx;
+
+        return true;
+    }
+
+    Result calculate(std::shared_ptr<Config> config, float x, float y, float z)
+    {
+        Context ctx = {std::move(config), x, y, z};
+
+        if (!isReachableWorkspace(ctx))
+        {}
+
+        // TODO: Do the rest of things
+        exit(1);
     }
 }  // namespace arm_ros2::inverse_kinematics_calculator

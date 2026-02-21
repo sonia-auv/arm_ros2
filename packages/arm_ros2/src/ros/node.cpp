@@ -33,11 +33,12 @@
 
 namespace arm_ros2::ros::node
 {
-    int init(const Config& config)
+    int init(std::shared_ptr<Config> config)
     {
         auto armNode = Arm::getInstance();
 
-        armNode->setJointNodes(config);
+        armNode->setConfig(config);
+        armNode->setJointNodes();
 
         return EXIT_SUCCESS;
     }
