@@ -40,18 +40,17 @@
 namespace arm_ros2::ros::action
 {
     using InterfaceActionArmControl = arm_ros2_interfaces::action::ArmControl;
-    using InterfaceActionArmControlGoal = arm_ros2_interfaces::action::ArmControl::Goal;
-    template <typename NodeT>
-    using BaseArmControl = Base<NodeT, InterfaceActionArmControlGoal>;
+    using InterfaceActionArmControlGoal = InterfaceActionArmControl::Goal;
+#define BaseArmControl Base<NodeT, InterfaceActionArmControlGoal>
 
     template <typename NodeT>
-    class ArmControlServer final : BaseArmControl<NodeT>
+    class ArmControlServer final : BaseArmControl
     {
         public:
-        ArmControlServer(NodeT* node) : arm_ros2::ros::action::Base<NodeT, InterfaceActionArmControlGoal>("ArmControl")
+        ArmControlServer(NodeT* node) : BaseArmControl("ArmControl")
         {
             _server = rclcpp_action::create_server<InterfaceActionArmControl>(
-                node, BaseArmControl<NodeT>::getActionName(),
+                node, BaseArmControl::getActionName(),
                 std::bind(&ArmControlServer::handleGoal, this, node, std::placeholders::_1, std::placeholders::_2),
                 std::bind(&ArmControlServer::handleCancel, this, node, std::placeholders::_1),
                 std::bind(&ArmControlServer::handleAccepted, this, node, std::placeholders::_1));
@@ -68,8 +67,7 @@ namespace arm_ros2::ros::action
         rclcpp_action::GoalResponse handleGoal(NodeT* node, const rclcpp_action::GoalUUID&,
                                                std::shared_ptr<const InterfaceActionArmControl::Goal>) const
         {
-            return BaseArmControl<NodeT>::handleGoal(node,
-                                                     []() { return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE; });
+            return BaseArmControl::handleGoal(node, []() { return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE; });
         }
 
         /**
@@ -78,7 +76,7 @@ namespace arm_ros2::ros::action
          */
         rclcpp_action::CancelResponse handleCancel(NodeT* node, const std::shared_ptr<GoalHandle>) const
         {
-            return BaseArmControl<NodeT>::handleCancel(node, []() { return rclcpp_action::CancelResponse::ACCEPT; });
+            return BaseArmControl::handleCancel(node, []() { return rclcpp_action::CancelResponse::ACCEPT; });
         }
 
         /**
@@ -87,9 +85,11 @@ namespace arm_ros2::ros::action
          */
         void handleAccepted(NodeT* node, const std::shared_ptr<GoalHandle>) const
         {
-            return BaseArmControl<NodeT>::handleAccepted(node, []() { return; });
+            return BaseArmControl::handleAccepted(node, []() { return; });
         }
 
         rclcpp_action::Server<arm_ros2_interfaces::action::ArmControl>::SharedPtr _server;
     };
+
+#undef BaseArmControl
 }  // namespace arm_ros2::ros::action
