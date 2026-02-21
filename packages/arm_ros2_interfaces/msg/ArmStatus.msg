@@ -1,0 +1,2 @@
+JointStatus[] joint_status_array
+GripperStatus gripper_status
