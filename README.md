@@ -13,3 +13,7 @@ To build the project, the following commands should be run directly from your RO
 colcon build
 source install/setup.bash
 ```
+
+## References
+
+- [Inverse Kinematics Techniques in Computer Graphics: A Survey](https://www.andreasaristidou.com/publications/papers/IK_survey.pdf)

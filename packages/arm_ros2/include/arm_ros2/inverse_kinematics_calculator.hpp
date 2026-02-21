@@ -33,5 +33,12 @@
 
 namespace arm_ros2::inverse_kinematics_calculator
 {
+    /**
+     *
+     * @brief Perform an inverse kinematics calculation from X, Y and Z coordinate.
+     * @param x Position of the gripper according X axis.
+     * @param y Position of the gripper according Y axis.
+     * @param z Position of the gripper according Z axis.
+     */
     void calculate(float x, float y, float z);
-}
+}  // namespace arm_ros2::inverse_kinematics_calculator
