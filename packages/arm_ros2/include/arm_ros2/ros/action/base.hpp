@@ -38,7 +38,7 @@
 
 namespace arm_ros2::ros::action
 {
-    template <typename NodeT, typename ActionGoal>
+    template <typename NodeT>
     class Base
     {
         public:

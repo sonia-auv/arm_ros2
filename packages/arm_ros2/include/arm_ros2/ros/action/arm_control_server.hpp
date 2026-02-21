@@ -39,15 +39,15 @@
 
 namespace arm_ros2::ros::action
 {
-    using InterfaceActionArmControl = arm_ros2_interfaces::action::ArmControl;
-    using InterfaceActionArmControlGoal = InterfaceActionArmControl::Goal;
-
 #undef BaseArmControl
-#define BaseArmControl Base<NodeT, InterfaceActionArmControlGoal>
+#define BaseArmControl Base<NodeT>
 
     template <typename NodeT>
     class ArmControlServer final : BaseArmControl
     {
+        using InterfaceActionArmControl = arm_ros2_interfaces::action::ArmControl;
+        using InterfaceActionArmControlGoal = InterfaceActionArmControl::Goal;
+
         public:
         ArmControlServer(NodeT* node) : BaseArmControl("ArmControl")
         {
