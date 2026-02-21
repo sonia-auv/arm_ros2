@@ -29,33 +29,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
-#include <arm_ros2/inverse_kinematics_calculator.hpp>
-#include <arm_ros2_interfaces/srv/inverse_kinematics_calculator.hpp>
-#include <rclcpp/rclcpp.hpp>
-
-namespace arm_ros2::ros::service
+namespace arm_ros2::inverse_kinematics_calculator
 {
-    template <typename NodeT>
-    class InverseKinematicsCalculator final
+    void calculate(float x, float y, float z)
     {
-        public:
-        using Interface = arm_ros2_interfaces::srv::InverseKinematicsCalculator;
-
-        InverseKinematicsCalculator(NodeT *node)
-        {
-            _service = node->createInverseKinematicsCalculatorService(
-                std::bind(&InverseKinematicsCalculator::handle, this, std::placeholders::_1, std::placeholders::_2));
-        }
-        ~InverseKinematicsCalculator() = default;
-
-        private:
-        void handle(const std::shared_ptr<Interface::Request> request, std::shared_ptr<Interface::Response>)
-        {
-            inverse_kinematics_calculator::calculate(request->x, request->y, request->z);
-        }
-
-        rclcpp::Service<Interface>::SharedPtr _service;
-    };
-}  // namespace arm_ros2::ros::service
+        (void)x;
+        (void)y;
+        (void)z;
+    }
+}  // namespace arm_ros2::inverse_kinematics_calculator

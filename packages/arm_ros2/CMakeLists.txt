@@ -29,6 +29,7 @@ endif()
 add_executable(${PROJECT_NAME}
 	${CMAKE_SOURCE_DIR}/src/cli.cpp
 	${CMAKE_SOURCE_DIR}/src/config.cpp
+	${CMAKE_SOURCE_DIR}/src/inverse_kinematics_calculator.cpp
 	${CMAKE_SOURCE_DIR}/src/main.cpp
 	${CMAKE_SOURCE_DIR}/src/ros/node.cpp
 	${CMAKE_SOURCE_DIR}/src/ros/node/arm.cpp)
