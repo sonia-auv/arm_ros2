@@ -34,6 +34,7 @@
 #include <arm_ros2/config.hpp>
 #include <arm_ros2/ros/action/arm_control_server.hpp>
 #include <arm_ros2/ros/node/joint.hpp>
+#include <arm_ros2/ros/service/inverse_kinematics_calculator.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
@@ -43,6 +44,11 @@ namespace arm_ros2::ros::node
     {
         public:
         ~Arm() = default;
+
+#undef InverseKinematicsCalculatorArm
+#define InverseKinematicsCalculatorArm service::InverseKinematicsCalculator<Arm>
+
+        friend class InverseKinematicsCalculatorArm;
 
         /**
          *
@@ -60,7 +66,21 @@ namespace arm_ros2::ros::node
         private:
         Arm() : rclcpp::Node("arm"), _control(this) {}
 
+        /**
+         *
+         * @brief Create `/arm_control/inverse_kinematics_calculator` service.
+         */
+        template <typename F>
+        rclcpp::Service<InverseKinematicsCalculatorArm::Interface>::SharedPtr createInverseKinematicsCalculatorService(
+            F&& callback)
+        {
+            return create_service<InverseKinematicsCalculatorArm::Interface>(
+                "/arm_control/inverse_kinematics_calculator", std::forward<F>(callback));
+        }
+
         std::vector<std::shared_ptr<Joint>> _jointNodes;
         action::ArmControlServer<Arm> _control;
+
+#undef InverseKinematicsCalculatorArm
     };
 }  // namespace arm_ros2::ros::node

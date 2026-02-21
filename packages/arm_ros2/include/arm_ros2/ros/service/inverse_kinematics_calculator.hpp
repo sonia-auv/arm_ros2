@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include <arm_ros2_interfaces/service/inverse_kinematics_calculator.hpp>
+#include <arm_ros2_interfaces/srv/inverse_kinematics_calculator.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 namespace arm_ros2::ros::service
@@ -44,15 +44,14 @@ namespace arm_ros2::ros::service
 
         InverseKinematicsCalculator(NodeT *node)
         {
-            _service = node->create_service<Interface>(
-                "/arm_control/inverse_kinematics_calculator",
-                std::bind(&InverseKinematicsCalculator::handle, this, std::placeholders::_1, std::placeholders::_2))
+            _service = node->createInverseKinematicsCalculatorService(
+                std::bind(&InverseKinematicsCalculator::handle, this, std::placeholders::_1, std::placeholders::_2));
         }
         ~InverseKinematicsCalculator() = default;
 
         private:
-        void handle(const std::shared_ptr<Interface::Request> request, std::shared_ptr<Interface::Response> response) {}
+        void handle(const std::shared_ptr<Interface::Request>, std::shared_ptr<Interface::Response>) {}
 
         rclcpp::Service<Interface>::SharedPtr _service;
-    }
+    };
 }  // namespace arm_ros2::ros::service

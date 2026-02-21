@@ -32,6 +32,7 @@
 #pragma once
 
 #include <arm_ros2/ros/action/base.hpp>
+#include <arm_ros2/ros/service/inverse_kinematics_calculator.hpp>
 #include <arm_ros2_interfaces/action/arm_control.hpp>
 #include <functional>
 #include <rclcpp/rclcpp.hpp>
@@ -42,6 +43,9 @@ namespace arm_ros2::ros::action
 #undef BaseArmControl
 #define BaseArmControl Base<NodeT>
 
+#undef ServiceInverseKinematicsCalculator
+#define ServiceInverseKinematicsCalculator service::InverseKinematicsCalculator<NodeT>
+
     template <typename NodeT>
     class ArmControlServer final : BaseArmControl
     {
@@ -49,7 +53,7 @@ namespace arm_ros2::ros::action
         using InterfaceActionArmControlGoal = InterfaceActionArmControl::Goal;
 
         public:
-        ArmControlServer(NodeT* node) : BaseArmControl("ArmControl")
+        ArmControlServer(NodeT* node) : BaseArmControl("ArmControl"), _inverseKinematicsCalculatorService(node)
         {
             _server = rclcpp_action::create_server<InterfaceActionArmControl>(
                 node, BaseArmControl::getActionName(),
@@ -91,7 +95,9 @@ namespace arm_ros2::ros::action
         }
 
         rclcpp_action::Server<arm_ros2_interfaces::action::ArmControl>::SharedPtr _server;
+        ServiceInverseKinematicsCalculator _inverseKinematicsCalculatorService;
     };
 
 #undef BaseArmControl
+#undef ServiceInverseKinematicsCalculator
 }  // namespace arm_ros2::ros::action
