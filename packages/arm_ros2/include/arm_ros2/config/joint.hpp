@@ -43,6 +43,7 @@ namespace arm_ros2::config
     {
         public:
         Joint(std::string name) : _name(std::make_shared<std::string>(name)) {}
+        Joint(const Joint&) = default;
         ~Joint() = default;
 
         /**

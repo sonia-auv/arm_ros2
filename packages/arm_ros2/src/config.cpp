@@ -85,7 +85,7 @@ namespace arm_ros2
                                                                      CoordinateCompatible &coordinate,
                                                                      const char *key) noexcept
     {
-        using CoordinateValue = float;
+        using CoordinateValue = double;
         static_assert(std::is_base_of_v<config::joint::Coordinate<CoordinateValue>, CoordinateCompatible>,
                       "`CoordinateCompatible` is not the base of `Coordinate`");
 
@@ -133,7 +133,7 @@ namespace arm_ros2
             {
                 std::stringstream errorFormat;
 
-                errorFormat << "Expected `" << coordinateKey << "` key to be compatible with float in the `" << key
+                errorFormat << "Expected `" << coordinateKey << "` key to be compatible with double in the `" << key
                             << "` in the joint configuration";
 
                 return Config::ParserError::BadConfig(Config::ParserError::_BadConfig(errorFormat.str()));
@@ -205,7 +205,7 @@ namespace arm_ros2
         joint.setAngle(angle);
         joint.setMaxAngle(maxAngle);
 
-        insertJoint(joint);
+        addJoint(joint);
 
         return {};
     }

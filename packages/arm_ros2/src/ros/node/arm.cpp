@@ -47,7 +47,7 @@ namespace arm_ros2::ros::node
 
         _jointNodes.reserve(configJoints.size());
 
-        for (const auto& [_, configJoint] : configJoints)
+        for (const auto& configJoint : configJoints)
         {
             std::shared_ptr<Joint> joint(new Joint(configJoint.getName()));
 

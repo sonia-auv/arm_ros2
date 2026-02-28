@@ -35,9 +35,9 @@
 
 namespace arm_ros2::config::joint
 {
-    class AngleBase : public Coordinate<float>
+    class AngleBase : public Coordinate<double>
     {
-        using Coordinate<float>::Coordinate;
+        using Coordinate<double>::Coordinate;
     };
 
     class Angle final : public AngleBase

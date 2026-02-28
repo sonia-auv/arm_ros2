@@ -35,8 +35,8 @@
 
 namespace arm_ros2::config::joint
 {
-    class Position final : public Coordinate<float>
+    class Position final : public Coordinate<double>
     {
-        using Coordinate<float>::Coordinate;
+        using Coordinate<double>::Coordinate;
     };
 }  // namespace arm_ros2::config::joint

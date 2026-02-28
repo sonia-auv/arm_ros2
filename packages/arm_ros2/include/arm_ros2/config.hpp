@@ -38,8 +38,8 @@
 #include <memory>
 #include <optional>
 #include <string_view>
-#include <unordered_map>
 #include <variant>
+#include <vector>
 
 namespace arm_ros2
 {
@@ -181,17 +181,14 @@ namespace arm_ros2
          *
          * @brief Get the joints of the given instance.
          */
-        const std::unordered_map<std::shared_ptr<std::string>, config::Joint>& getJoints() const noexcept
-        {
-            return _joints;
-        }
+        const std::vector<config::Joint>& getJoints() const noexcept { return _joints; }
 
         /**
          *
-         * @brief Insert joint into _joints unordered map.
+         * @brief Add joint into _joints vector.
          * @param joint The joint to insert.
          */
-        void insertJoint(config::Joint joint) noexcept { _joints.insert({joint.getNamePtr(), joint}); }
+        void addJoint(config::Joint joint) noexcept { _joints.push_back(joint); }
 
         /**
          *
@@ -213,7 +210,7 @@ namespace arm_ros2
         [[nodiscard]] ParserErrorOr parseGripperState(const YAML::Node& node) noexcept;
         [[nodiscard]] ParserErrorOr parseGripper(const YAML::Node& node) noexcept;
 
-        std::unordered_map<std::shared_ptr<std::string>, config::Joint> _joints;
+        std::vector<config::Joint> _joints;
         config::Gripper _gripper;
         bool _isInitialized = false;
     };
