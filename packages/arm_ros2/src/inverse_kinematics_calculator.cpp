@@ -215,7 +215,7 @@ namespace arm_ros2::inverse_kinematics_calculator
             {
                 Result result;
 
-                *resultOpt = std::move(result);
+                resultOpt = std::move(result);
 
                 return error;
             }
