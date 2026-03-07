@@ -98,7 +98,7 @@ namespace arm_ros2::ros::node
 
         /**
          *
-         * @brief Create `/arm_control/server/status` service.
+         * @brief Create `/arm_control/server/status` publisher.
          */
         rclcpp::Publisher<ArmServerStatus::Interface>::SharedPtr createArmServerStatusPublisher()
         {
