@@ -100,7 +100,7 @@ namespace arm_ros2::ros::action
         void handleAccepted(NodeT* node, const std::shared_ptr<GoalHandle>)
         {
             return BaseArmControl::handleAccepted(node, [&]() {
-		// Restet the state of server status.
+                // Restet the state of server status.
                 _publisherArmServerStatus.update([](arm_ros2_interfaces::msg::ArmServerStatus& status) {
                     status.state = publisher::ArmServerStatus<NodeT>::Interface::WAITING;
                 });
