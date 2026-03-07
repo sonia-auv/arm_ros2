@@ -47,6 +47,9 @@ namespace arm_ros2::ros::action
 #undef ServiceInverseKinematicsCalculator
 #define ServiceInverseKinematicsCalculator service::InverseKinematicsCalculator<NodeT>
 
+#undef PublisherArmServerStatus
+#define PublisherArmServerStatus publisher::ArmServerStatus<NodeT>
+
     template <typename NodeT>
     class ArmControlServer final : BaseArmControl
     {
@@ -109,9 +112,10 @@ namespace arm_ros2::ros::action
 
         rclcpp_action::Server<arm_ros2_interfaces::action::ArmControl>::SharedPtr _server;
         ServiceInverseKinematicsCalculator _inverseKinematicsCalculatorService;
-        publisher::ArmServerStatus<NodeT> _publisherArmServerStatus;
+        PublisherArmServerStatus _publisherArmServerStatus;
     };
 
 #undef BaseArmControl
 #undef ServiceInverseKinematicsCalculator
+#undef PublisherArmServerStatus
 }  // namespace arm_ros2::ros::action
