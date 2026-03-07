@@ -34,6 +34,7 @@
 #include <arm_ros2/config.hpp>
 #include <arm_ros2/ros/action/arm_control_server.hpp>
 #include <arm_ros2/ros/node/joint.hpp>
+#include <arm_ros2/ros/publisher/arm_server_status.hpp>
 #include <arm_ros2/ros/service/inverse_kinematics_calculator.hpp>
 #include <memory>
 #include <optional>
@@ -49,7 +50,11 @@ namespace arm_ros2::ros::node
 #undef InverseKinematicsCalculatorArm
 #define InverseKinematicsCalculatorArm service::InverseKinematicsCalculator<Arm>
 
+#undef ArmServerStatus
+#define ArmServerStatus publisher::ArmServerStatus<Arm>
+
         friend class InverseKinematicsCalculatorArm;
+        friend class ArmServerStatus;
 
         /**
          *
@@ -89,6 +94,15 @@ namespace arm_ros2::ros::node
         {
             return create_service<InverseKinematicsCalculatorArm::Interface>(
                 "/arm_control/inverse_kinematics_calculator", std::forward<F>(callback));
+        }
+
+        /**
+         *
+         * @brief Create `/arm_control/server/status` service.
+         */
+        rclcpp::Publisher<ArmServerStatus::Interface>::SharedPtr createArmServerStatusPublisher()
+        {
+            return create_publisher<ArmServerStatus::Interface>("/arm_control/server/status", 1);
         }
 
         std::vector<std::shared_ptr<Joint>> _jointNodes;

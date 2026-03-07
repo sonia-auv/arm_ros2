@@ -32,6 +32,7 @@
 #pragma once
 
 #include <arm_ros2/ros/action/base.hpp>
+#include <arm_ros2/ros/publisher/arm_server_status.hpp>
 #include <arm_ros2/ros/service/inverse_kinematics_calculator.hpp>
 #include <arm_ros2_interfaces/action/arm_control.hpp>
 #include <functional>
@@ -53,7 +54,8 @@ namespace arm_ros2::ros::action
         using InterfaceActionArmControlGoal = InterfaceActionArmControl::Goal;
 
         public:
-        ArmControlServer(NodeT* node) : BaseArmControl("ArmControl"), _inverseKinematicsCalculatorService(node)
+        ArmControlServer(NodeT* node)
+            : BaseArmControl("ArmControl"), _inverseKinematicsCalculatorService(node), _publisherArmServerStatus(node)
         {
             _server = rclcpp_action::create_server<InterfaceActionArmControl>(
                 node, BaseArmControl::getActionName(),
@@ -71,9 +73,15 @@ namespace arm_ros2::ros::action
          * @brief Handle goal of `ArmControl` action.
          */
         rclcpp_action::GoalResponse handleGoal(NodeT* node, const rclcpp_action::GoalUUID&,
-                                               std::shared_ptr<const InterfaceActionArmControl::Goal>) const
+                                               std::shared_ptr<const InterfaceActionArmControl::Goal>)
         {
-            return BaseArmControl::handleGoal(node, []() { return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE; });
+            return BaseArmControl::handleGoal(node, [&]() {
+                _publisherArmServerStatus.update([](arm_ros2_interfaces::msg::ArmServerStatus& status) {
+                    status.state = publisher::ArmServerStatus<NodeT>::Interface::RUNNING;
+                });
+
+                return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+            });
         }
 
         /**
@@ -82,20 +90,26 @@ namespace arm_ros2::ros::action
          */
         rclcpp_action::CancelResponse handleCancel(NodeT* node, const std::shared_ptr<GoalHandle>) const
         {
-            return BaseArmControl::handleCancel(node, []() { return rclcpp_action::CancelResponse::ACCEPT; });
+            return BaseArmControl::handleCancel(node, [&]() { return rclcpp_action::CancelResponse::ACCEPT; });
         }
 
         /**
          *
          * @brief Handle accept of `ArmControl` action.
          */
-        void handleAccepted(NodeT* node, const std::shared_ptr<GoalHandle>) const
+        void handleAccepted(NodeT* node, const std::shared_ptr<GoalHandle>)
         {
-            return BaseArmControl::handleAccepted(node, []() { return; });
+            return BaseArmControl::handleAccepted(node, [&]() {
+		// Restet the state of server status.
+                _publisherArmServerStatus.update([](arm_ros2_interfaces::msg::ArmServerStatus& status) {
+                    status.state = publisher::ArmServerStatus<NodeT>::Interface::WAITING;
+                });
+            });
         }
 
         rclcpp_action::Server<arm_ros2_interfaces::action::ArmControl>::SharedPtr _server;
         ServiceInverseKinematicsCalculator _inverseKinematicsCalculatorService;
+        publisher::ArmServerStatus<NodeT> _publisherArmServerStatus;
     };
 
 #undef BaseArmControl

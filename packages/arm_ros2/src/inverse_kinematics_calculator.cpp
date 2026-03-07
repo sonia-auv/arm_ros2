@@ -56,9 +56,14 @@ namespace arm_ros2::inverse_kinematics_calculator
         enum T : std::uint8_t
         {
             None,
+            // This error occurs when no joint is defined in the configuration
             HaveNoJoint
         };
 
+        /**
+         *
+         * @brief Convert error to string.
+         */
         static const char *toString(T &error);
     };  // namespace Error
 

@@ -10,6 +10,7 @@ find_package(action_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
 	action/ArmControl.action
+	msg/ArmServerStatus.msg
 	msg/ArmStatus.msg
 	msg/GripperStatus.msg
 	msg/InverseKinematicsCalculatorResult.msg
