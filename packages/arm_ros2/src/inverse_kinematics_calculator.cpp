@@ -191,6 +191,16 @@ namespace arm_ros2::inverse_kinematics_calculator
         return jointDSum >= targetD;
     }
 
+    void iterateCalculation()
+    {
+#define MAX_ITERATION 1000
+
+        for (int i = 0; i < MAX_ITERATION; ++i)
+        {}
+
+#undef MAX_ITERATION
+    }
+
     Result handleCalculateError(const Context &ctx, std::function<Error::T(std::optional<Result> &)> handler)
     {
         std::optional<Result> resultOpt = {};
@@ -224,6 +234,8 @@ namespace arm_ros2::inverse_kinematics_calculator
 
                 return error;
             }
+
+            iterateCalculation();
 
             return error;
         });
