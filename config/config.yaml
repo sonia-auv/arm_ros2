@@ -1,0 +1,43 @@
+joints:
+  - A:
+    position:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+    angle:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+    maxAngle:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+  - B:
+    position:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+    angle:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+    maxAngle:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+  - C:
+    position:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+    angle:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+    maxAngle:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+
+gripper:
+  state: Close # Close | Open

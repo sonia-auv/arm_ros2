@@ -1,0 +1,149 @@
+@startuml
+set separator ::
+
+Class arm_ros2::Config {
+  +Config()
+  +\~Config()
+  +ParserErrorOr parse(const std::string& filename)
+  +const std::unordered_map<std::shared_ptr<std::string>, config::Joint>& getJoints()
+  +void insertJoint(config::Joint joint)
+  +const config::Gripper& getGripper()
+  -std::unordered_map<std::shared_ptr<std::string>, config::Joint> _joints
+  -config::Gripper _gripper
+  -bool _isInitialized
+}
+
+Class "std::optional<arm_ros2::ParserError>" as arm_ros2::ParserErrorOr
+Class "std::variant<_AlreadyParsed, _BadFile, _Syntax, _BadConfig, _Other>" as arm_ros2::Value
+
+Struct arm_ros2::ParserError {
+  +ParserError(Value value)
+  +\~ParserError()
+  +{static} ParserError AlreadyParsed()
+  +{static} ParserError BadFile()
+  +{static} ParserError Syntax(_Syntax value)
+  +{static} ParserError BadConfig(_BadConfig value)
+  +{static} ParserError Other(_Other value)
+  +operator std::string()
+  -Value _value
+}
+
+Struct arm_ros2::_AlreadyParsed {
+  +_AlreadyParsed()
+  +operator std::string()
+}
+
+Struct arm_ros2::_BadFile {
+  +_BadFile()
+  +operator std::string()
+}
+
+Struct arm_ros2::_Syntax {
+  +_Syntax(std::string details)
+  +operator std::string()
+  -std::string _details
+}
+
+Struct arm_ros2::_BadConfig {
+  +_BadConfig(std::string details)
+  +operator std::string()
+  -std::string _details
+}
+ 
+Struct arm_ros2::_Other {
+  +_Other(std::string message)
+  +operator std::string()
+  -std::string _message
+}
+
+arm_ros2::ParserError --> arm_ros2::Value
+arm_ros2::ParserError --> arm_ros2::_AlreadyParsed
+arm_ros2::ParserError --> arm_ros2::_BadFile
+arm_ros2::ParserError --> arm_ros2::_Syntax
+arm_ros2::ParserError --> arm_ros2::_BadConfig
+arm_ros2::ParserError --> arm_ros2::_Other
+arm_ros2::Config --> arm_ros2::ParserError
+arm_ros2::Config --> arm_ros2::ParserErrorOr
+
+enum arm_ros2::config::State {
+  Close
+  Open
+}
+
+Class arm_ros2::config::Gripper {
+  +Gripper(State state)
+  +\~Gripper()
+  +State getState()
+  +void setState(State state)
+  -State _state
+}
+
+arm_ros2::config::Gripper --> arm_ros2::config::State
+
+Class arm_ros2::config::Joint {
+  +Joint(std::string name)
+  +\~Joint()
+  +std::string& getName()
+  +std::shared_ptr<std::string> getNamePtr()
+  +const joint::Position& getPosition()
+  +const joint::Angle& getAngle()
+  +const joint::MaxAngle& getMaxAngle()
+  +void setPosition(joint::Position position)
+  +void setAngle(joint::Angle angle)
+  +void setMaxAngle(joint::MaxAngle maxAngle)
+  -std::shared_ptr<std::string> _name
+  -joint::Position _position
+  -joint::Angle _angle
+  -joint::MaxAngle _maxAngle
+}
+
+class arm_ros2::config::joint::AngleBase {
+}
+
+Class arm_ros2::config::joint::Angle {
+}
+
+Class arm_ros2::config::joint::Coordinate<V> {
+  +Coordinate(V x, V y, V z)
+  +\~Coordinate()
+  +V getX()
+  +V getY()
+  +V getZ()
+  +void setX(V x)
+  +void setY(V y)
+  +void setZ(V z)
+  -V _x
+  -V _y
+  -V _z
+}
+
+Class arm_ros2::config::joint::MaxAngle {
+}
+
+Class arm_ros2::config::joint::Position {
+}
+
+arm_ros2::config::joint::Coordinate <|-- arm_ros2::config::joint::AngleBase
+arm_ros2::config::joint::Coordinate <|-- arm_ros2::config::joint::Position
+arm_ros2::config::joint::AngleBase <|-- arm_ros2::config::joint::Angle
+arm_ros2::config::joint::AngleBase <|-- arm_ros2::config::joint::MaxAngle
+
+Class rclcpp::Node {
+}
+
+Class arm_ros2::ros::node::Arm {
+  +\~Arm()
+  +{static} std::shared_ptr<Arm> getInstance()
+  +void setJointNodes(const Config& config)
+  -Arm()
+  -std::vector<std::shared_ptr<Joint>> _jointNodes
+}
+
+Class arm_ros2::ros::node::Joint {
+  +Joint(std::string name)
+  +\~Joint()
+}
+
+arm_ros2::ros::node::Arm <|-- rclcpp::Node
+arm_ros2::ros::node::Joint <|-- rclcpp::Node
+@enduml
