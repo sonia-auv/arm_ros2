@@ -29,40 +29,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <initializer_list>
-
 namespace arm_ros2
 {
-    template <typename T, size_t N>
-    class MatrixJ
+    template <typename T>
+    class Vector3
     {
         public:
-        MatrixJ(std::initializer_list<T> x, std::initializer_list<T> y, std::initializer_list<T> z)
-            : _x(x), _y(y), _z(z)
-        {}
-        ~MatrixJ() = default;
+        Vector3(T x = {}, T y = {}, T z = {}) : _x(x), _y(y), _z(z) {}
+        ~Vector3() = default;
 
         /**
          *
          * @brief Get `_x` attribute.
          */
-        inline const T* getX() const noexcept { return _x; }
+        inline T getX() const noexcept { return _x; }
 
         /**
          *
          * @brief Get `_y` attribute.
          */
-        inline const T* getY() const noexcept { return _y; }
+        inline T getY() const noexcept { return _y; }
 
         /**
          *
          * @brief Get `_z` attribute.
          */
-        inline const T* getZ() const noexcept { return _z; }
+        inline T getZ() const noexcept { return _z; }
+
+        /**
+         *
+         * @brief Add two vectors. 
+         */
+        inline Vector3<T> add(Vector3<T> &other) noexcept { return Vector3<T>(_x + other._x, _y + other._y, _z + other._z); }
+
+	/**
+	 *
+	 * @brief Subtract two vectors.
+	 */
+	inline Vector3<T> sub(Vector3<T> &other) noexcept { return Vector3<T>(_x - other._x, _y - other._y, _z - other._z); }
 
         private:
-        T _x[N];
-        T _y[N];
-        T _z[N];
+        T _x;
+        T _y;
+        T _z;
     };
 }  // namespace arm_ros2

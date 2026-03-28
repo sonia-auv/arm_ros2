@@ -30,8 +30,9 @@
  */
 
 #include <arm_ros2/inverse_kinematics_calculator.hpp>
-#include <arm_ros2/utility.hpp>
 #include <arm_ros2/matrix_j.hpp>
+#include <arm_ros2/utility.hpp>
+#include <arm_ros2/vector3.hpp>
 #include <cmath>
 #include <optional>
 #include <rclcpp/rclcpp.hpp>
