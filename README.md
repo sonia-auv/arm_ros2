@@ -17,3 +17,4 @@ source install/setup.bash
 ## References
 
 - [Inverse Kinematics Techniques in Computer Graphics: A Survey](https://www.andreasaristidou.com/publications/papers/IK_survey.pdf)
+- [Inverse Kinematics Guide](https://github.com/SpehleonLP/IK-Guide)

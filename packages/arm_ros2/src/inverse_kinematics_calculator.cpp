@@ -31,6 +31,7 @@
 
 #include <arm_ros2/inverse_kinematics_calculator.hpp>
 #include <arm_ros2/utility.hpp>
+#include <arm_ros2/matrix_j.hpp>
 #include <cmath>
 #include <optional>
 #include <rclcpp/rclcpp.hpp>
@@ -42,6 +43,7 @@ namespace arm_ros2::inverse_kinematics_calculator
         std::cout << "todo: " << msg << std::endl; \
         exit(1);                                   \
     }
+
     struct Context
     {
         std::shared_ptr<Config> config;
